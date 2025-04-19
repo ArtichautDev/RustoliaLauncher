@@ -27,6 +27,10 @@
                 <span class="loginErrorSpan" id="loginPasswordError"><%- lang('login.loginPasswordError') %></span>
                 <input id="loginPassword" class="loginField" type="password" placeholder="<%- lang('login.loginPasswordPlaceholder') %>"/>
             </div>
+            <div class="loginFieldContainer" id="login2faContainer" style="display: none;">
+                <span class="loginErrorSpan" id="login2faError"></span>
+                <input id="login2faCode" class="loginField" type="text" placeholder="<%- lang('login.login2faPlaceholder') %>"/>
+            </div>
             <div id="loginOptions">
                 <span class="loginSpanDim">
                     <a href="<%- lang('login.loginForgotPasswordLink') %>"><%- lang('login.loginForgotPasswordText') %></a>
