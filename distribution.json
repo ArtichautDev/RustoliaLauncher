@@ -1,0 +1,204 @@
+{
+  "version": "1.0.0",
+  "rss": "https://rustolia.eu/api/rss.xml",
+  "discord": {
+    "clientId": "1363156398489337867",
+    "smallImageText": "Launcher Rustolia",
+    "smallImageKey": "logo"
+  },
+  "servers": [
+    {
+      "id": "Rustolia",
+      "name": "Rustolia",
+      "description": "Rustolia (Fabric v0.15.6)",
+      "icon": "https://rustolia.eu/storage/img/logo.png",
+      "version": "1.0.0",
+      "address": "play.rustolia.eu:25565",
+      "minecraftVersion": "1.20.4",
+      "discord": {
+        "shortId": "1363156398489337867",
+        "largeImageText": "Rustolia",
+        "largeImageKey": "logo"
+      },
+      "mainServer": true,
+      "autoconnect": true,
+      "modules": [
+        {
+          "id": "net.fabricmc:fabric-loader:0.15.6",
+          "name": "Fabric (fabric-loader)",
+          "type": "Fabric",
+          "artifact": {
+            "size": 1321135,
+            "MD5": "744dbc7c568d7e782e6616637a14f6b3",
+            "url": "https://rustolia.eu/RustoliaCDN/fabric-loader-0.15.6.jar"
+          },
+          "subModules": [
+            {
+              "id": "1.20.4-fabric-0.15.6",
+              "name": "Fabric (version.json)",
+              "type": "VersionManifest",
+              "artifact": {
+                "size": 2847,
+                "MD5": "6052ebb6acbba734c83fd3a09e67d31e",
+                "url": "https://rustolia.eu/RustoliaCDN/1.20.4-fabric-0.15.6.json"
+              }
+            },
+            {
+              "id": "org.ow2.asm:asm:9.6",
+              "name": "Fabric (asm)",
+              "type": "Library",
+              "artifact": {
+                "size": 123598,
+                "MD5": "6f8bccf756f170d4185bb24c8c2d2020",
+                "url": "https://rustolia.eu/RustoliaCDN/asm-9.6.jar"
+              }
+            },
+            {
+              "id": "org.ow2.asm:asm-analysis:9.6",
+              "name": "Fabric (asm-analysis)",
+              "type": "Library",
+              "artifact": {
+                "size": 34041,
+                "MD5": "31c84ef7cc893fb278952ae2d6a2674f",
+                "url": "https://rustolia.eu/RustoliaCDN/asm-analysis-9.6.jar"
+              }
+            },
+            {
+              "id": "org.ow2.asm:asm-commons:9.6",
+              "name": "Fabric (asm-commons)",
+              "type": "Library",
+              "artifact": {
+                "size": 72194,
+                "MD5": "9e317c75534bd1da8c00a67c618ab288",
+                "url": "https://rustolia.eu/RustoliaCDN/asm-commons-9.6.jar"
+              }
+            },
+            {
+              "id": "org.ow2.asm:asm-tree:9.6",
+              "name": "Fabric (asm-tree)",
+              "type": "Library",
+              "artifact": {
+                "size": 51935,
+                "MD5": "6062608f1a98afe1e853d01fa1221a9e",
+                "url": "https://rustolia.eu/RustoliaCDN/asm-tree-9.6.jar"
+              }
+            },
+            {
+              "id": "org.ow2.asm:asm-util:9.6",
+              "name": "Fabric (asm-util)",
+              "type": "Library",
+              "artifact": {
+                "size": 91131,
+                "MD5": "bd3bc1c176a787373e9a031073c9574b",
+                "url": "https://rustolia.eu/RustoliaCDN/asm-util-9.6.jar"
+              }
+            },
+            {
+              "id": "net.fabricmc:sponge-mixin:0.12.5+mixin.0.8.5",
+              "name": "Fabric (sponge-mixin)",
+              "type": "Library",
+              "artifact": {
+                "size": 1451874,
+                "MD5": "4cc3ff559cafdc70d9ed80e869d447f0",
+                "url": "https://rustolia.eu/RustoliaCDN/sponge-mixin-0.12.5+mixin.0.8.5.jar"
+              }
+            },
+            {
+              "id": "net.fabricmc:intermediary:1.20.4",
+              "name": "Fabric (intermediary)",
+              "type": "Library",
+              "artifact": {
+                "size": 608319,
+                "MD5": "3a1cade1634c518db6147c9771686ea9",
+                "url": "https://rustolia.eu/RustoliaCDN/intermediary-1.20.4.jar"
+              }
+            }
+          ]
+        },
+        {
+          "id": "generated.fabricmod:iris:1.6.15@jar",
+          "name": "Iris",
+          "type": "FabricMod",
+          "artifact": {
+            "size": 2416339,
+            "url": "https://rustolia.eu/RustoliaCDN/iris-mc1.20.4-1.6.15.jar",
+            "MD5": "a2f7578c1652222e8c703831b604150e"
+          },
+          "required": {
+            "value": false
+          }
+        },
+        {
+          "id": "me.jellysquid.mods:lithium:0.12.1@jar",
+          "name": "Lithium",
+          "type": "FabricMod",
+          "artifact": {
+            "size": 716022,
+            "url": "https://rustolia.eu/RustoliaCDN/lithium-fabric-mc1.20.4-0.12.1.jar",
+            "MD5": "83da6729d5402dc42eca740a96f97346"
+          },
+          "required": {
+            "value": false
+          }
+        },
+        {
+          "id": "com.terraformersmc:modmenu:9.0.0@jar",
+          "name": "Mod Menu",
+          "type": "FabricMod",
+          "artifact": {
+            "size": 724484,
+            "url": "https://rustolia.eu/RustoliaCDN/modmenu-9.0.0.jar",
+            "MD5": "7eb06d459405ed6c87b16f4c5be4493d"
+          },
+          "required": {
+            "value": false
+          }
+        },
+        {
+          "id": "me.jellysquid.mods:sodium:0.5.8+mc1.20.4@jar",
+          "name": "Sodium",
+          "type": "FabricMod",
+          "artifact": {
+            "size": 949085,
+            "url": "https://rustolia.eu/RustoliaCDN/sodium-fabric-0.5.8+mc1.20.4.jar",
+            "MD5": "d7753a50ca37f50abb10465a9a425dac"
+          },
+          "required": {
+            "value": false
+          }
+        },
+        {
+          "id": "com.rustolia.auth:RustoliaAuthMod:1.0.0@jar",
+          "name": "Rustolia Auth Mod",
+          "type": "FabricMod",
+          "artifact": {
+            "size": 6442,
+            "url": "https://rustolia.eu/RustoliaCDN/RustoliaAuth.jar",
+            "MD5": "2370f7b52435e5b0b94e1474af5eac48"
+          }
+        },
+        {
+          "id": "generated.library:fabric:api-0.95.4+1.20.4@jar",
+          "name": "fabric",
+          "type": "Library",
+          "artifact": {
+            "size": 2141107,
+            "url": "https://rustolia.eu/RustoliaCDN/fabric-api-0.95.4+1.20.4.jar",
+            "MD5": "e16ba73c962937a8a11515ecfd47d163"
+          }
+        },
+        {
+          "id": "servers.dat",
+          "name": "servers.dat",
+          "type": "File",
+          "artifact": {
+            "size": 160,
+            "url": "https://rustolia.eu/RustoliaCDN/servers.x",
+            "MD5": "7766afa75327dd5e1754efce9545e0f3",
+            "path": "servers.dat"
+          }
+        }
+      ]
+    }
+  ]
+}

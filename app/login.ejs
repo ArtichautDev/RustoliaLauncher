@@ -7,7 +7,7 @@
     </div>
     <div id="loginContent">
         <form id="loginForm">
-            <img id="loginImageSeal" src="assets/images/SealCircle.png"/>
+            <img id="loginImageSeal" src="assets/images/Logo.png"/>
             <span id="loginSubheader"><%- lang('login.loginSubheader') %></span>
             <div class="loginFieldContainer">
                 <svg id="profileSVG" class="loginSVG" viewBox="40 37 65.36 61.43">
@@ -28,6 +28,7 @@
                 <input id="loginPassword" class="loginField" type="password" placeholder="<%- lang('login.loginPasswordPlaceholder') %>"/>
             </div>
             <div class="loginFieldContainer" id="login2faContainer" style="display: none;">
+                <label id="login2faTitle"><%- lang('login.login2faTitle') %></label>
                 <span class="loginErrorSpan" id="login2faError"></span>
                 <input id="login2faCode" class="loginField" type="text" placeholder="<%- lang('login.login2faPlaceholder') %>"/>
             </div>

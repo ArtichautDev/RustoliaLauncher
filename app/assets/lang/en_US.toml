@@ -33,6 +33,7 @@ loginNeedAccountLink = "https://minecraft.net/store/minecraft-java-edition/"
 loginNeedAccountText = "Need an Account?"
 loginPasswordDisclaimer1 = "Your password is sent directly to mojang and never stored."
 loginPasswordDisclaimer2 = "{appName} is not affiliated with Mojang AB."
+login2faTitle = "2FA Code"
 
 [ejs.loginOptions]
 loginOptionsTitle = "Login Options"

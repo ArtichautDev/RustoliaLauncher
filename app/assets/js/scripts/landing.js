@@ -149,7 +149,7 @@ function updateSelectedAccount(authUser){
             username = authUser.displayName
         }
         if(authUser.uuid != null){
-            document.getElementById('avatarContainer').style.backgroundImage = `url('https://mc-heads.net/body/${authUser.uuid}/right')`
+            document.getElementById('avatarContainer').style.backgroundImage = `url('https://rustolia.eu/api/skin-api/avatars/face/${username}')`
         }
     }
     user_text.innerHTML = username
@@ -176,62 +176,37 @@ server_selection_button.onclick = async e => {
     await toggleServerSelection(true)
 }
 
-// Update Mojang Status Color
-const refreshMojangStatuses = async function(){
-    loggerLanding.info('Refreshing Mojang Statuses..')
-
+// Update Rustolia Status Color
+const refreshRustoliaStatuses = async function updateRustoliaStatuses(){
+    // Check Rustolia.eu service status with a simple fetch
     let status = 'grey'
     let tooltipEssentialHTML = ''
-    let tooltipNonEssentialHTML = ''
 
-    const response = await MojangRestAPI.status()
-    let statuses
-    if(response.responseStatus === RestResponseStatus.SUCCESS) {
-        statuses = response.data
-    } else {
-        loggerLanding.warn('Unable to refresh Mojang service status.')
-        statuses = MojangRestAPI.getDefaultStatuses()
-    }
-    
-    greenCount = 0
-    greyCount = 0
-
-    for(let i=0; i<statuses.length; i++){
-        const service = statuses[i]
-
-        const tooltipHTML = `<div class="mojangStatusContainer">
-            <span class="mojangStatusIcon" style="color: ${MojangRestAPI.statusToHex(service.status)};">&#8226;</span>
-            <span class="mojangStatusName">${service.name}</span>
-        </div>`
-        if(service.essential){
-            tooltipEssentialHTML += tooltipHTML
-        } else {
-            tooltipNonEssentialHTML += tooltipHTML
-        }
-
-        if(service.status === 'yellow' && status !== 'red'){
-            status = 'yellow'
-        } else if(service.status === 'red'){
-            status = 'red'
-        } else {
-            if(service.status === 'grey'){
-                ++greyCount
-            }
-            ++greenCount
-        }
-
-    }
-
-    if(greenCount === statuses.length){
-        if(greyCount === statuses.length){
-            status = 'grey'
-        } else {
+    try {
+        const response = await fetch('https://rustolia.eu/ping.html')
+        if(response.ok) {
             status = 'green'
+            tooltipEssentialHTML = `<div class="mojangStatusContainer">
+                <span class="mojangStatusIcon" style="color: ${MojangRestAPI.statusToHex('green')};">&#8226;</span>
+                <span class="mojangStatusName">Rustolia.eu Website</span>
+            </div>`
+        } else {
+            status = 'red'
+            tooltipEssentialHTML = `<div class="mojangStatusContainer">
+                <span class="mojangStatusIcon" style="color: ${MojangRestAPI.statusToHex('red')};">&#8226;</span>
+                <span class="mojangStatusName">Rustolia.eu Website</span>
+            </div>`
         }
+    } catch(err) {
+        loggerLanding.warn('Unable to refresh Rustolia service status.')
+        status = 'red'
+        tooltipEssentialHTML = `<div class="mojangStatusContainer">
+            <span class="mojangStatusIcon" style="color: ${MojangRestAPI.statusToHex('red')};">&#8226;</span>
+            <span class="mojangStatusName">Rustolia.eu Website</span>
+        </div>`
     }
-    
+
     document.getElementById('mojangStatusEssentialContainer').innerHTML = tooltipEssentialHTML
-    document.getElementById('mojangStatusNonEssentialContainer').innerHTML = tooltipNonEssentialHTML
     document.getElementById('mojang_status_icon').style.color = MojangRestAPI.statusToHex(status)
 }
 
@@ -244,7 +219,8 @@ const refreshServerStatus = async (fade = false) => {
 
     try {
 
-        const servStat = await getServerStatus(47, serv.hostname, serv.port)
+        // Use play.rustolia.eu as the server
+        const servStat = await getServerStatus(47, '178.32.43.27', 25565)
         console.log(servStat)
         pLabel = Lang.queryJS('landing.serverStatus.players')
         pVal = servStat.players.online + '/' + servStat.players.max
@@ -266,11 +242,11 @@ const refreshServerStatus = async (fade = false) => {
     
 }
 
-refreshMojangStatuses()
+refreshRustoliaStatuses()
 // Server Status is refreshed in uibinder.js on distributionIndexDone.
 
 // Refresh statuses every hour. The status page itself refreshes every day so...
-let mojangStatusListener = setInterval(() => refreshMojangStatuses(true), 60*60*1000)
+let mojangStatusListener = setInterval(() => refreshRustoliaStatuses(true), 60*60*1000)
 // Set refresh rate to once every 5 minutes.
 let serverStatusListener = setInterval(() => refreshServerStatus(true), 300000)
 
@@ -438,7 +414,7 @@ async function downloadJava(effectiveJavaOptions, launchAfter = true) {
 // Keep reference to Minecraft Process
 let proc
 // Is DiscordRPC enabled
-let hasRPC = false
+let hasRPC = true
 // Joined server regex
 // Change this if your server uses something different.
 const GAME_JOINED_REGEX = /\[.+\]: Sound engine started/
@@ -953,28 +929,23 @@ function displayArticle(articleObject, index){
 }
 
 /**
- * Load news information from the RSS feed specified in the
- * distribution index.
+ * Load news information from Rustolia's RSS feed
  */
 async function loadNews(){
-
-    const distroData = await DistroAPI.getDistribution()
-    if(!distroData.rawDistribution.rss) {
-        loggerLanding.debug('No RSS feed provided.')
-        return null
-    }
+    // Use Rustolia's RSS feed directly
+    const newsFeed = 'https://rustolia.eu/api/rss'
+    const newsHost = 'https://rustolia.eu/'
 
     const promise = new Promise((resolve, reject) => {
-        
-        const newsFeed = distroData.rawDistribution.rss
-        const newsHost = new URL(newsFeed).origin + '/'
         $.ajax({
             url: newsFeed,
             success: (data) => {
                 const items = $(data).find('item')
                 const articles = []
 
-                for(let i=0; i<items.length; i++){
+                // Limit to 2 most recent articles
+                const maxArticles = Math.min(items.length, 2)
+                for(let i=0; i<maxArticles; i++){
                 // JQuery Element
                     const el = $(items[i])
 

@@ -116,10 +116,14 @@ exports.addMojangAccount = async function(email, password, twoFaCode = null) {
         if (result.status !== 'success') {
             return Promise.reject({ title: Lang.queryJS('login.error.unknown'), desc: JSON.stringify(result) })
         }
-        const uuid = result.uuid || (result.id != null ? String(result.id) : email)
+        // Extract user ID and UUID
+        const userId = result.id ? String(result.id) : null
+        const uuid = result.uuid || (userId != null ? userId : email)
         const displayName = result.username || email
         const accessToken = result.token || result.accessToken || result.access_token
-        const ret = ConfigManager.addMojangAuthAccount(uuid, accessToken, email, displayName)
+        
+        // Store userId as part of the account data for token generation
+        const ret = ConfigManager.addMojangAuthAccount(uuid, accessToken, email, displayName, userId)
         ConfigManager.save()
         return ret
     } catch(err) {
@@ -188,5 +192,53 @@ exports.removeMicrosoftAccount = async function(uuid){
     } catch (err){
         log.error('Error while removing account', err)
         return Promise.reject(err)
+    }
+}
+
+/**
+ * Logout from Azuriom Auth and invalidate the access token, then remove the account.
+ * This follows the same pattern as removeMojangAccount.
+ * 
+ * @param {string} uuid The UUID of the account to be removed.
+ * @returns {Promise.<void>} Promise which resolves to void when the action is complete.
+ */
+exports.logout = async function(uuid){
+    try {
+        const authAcc = ConfigManager.getAuthAccount(uuid)
+        
+        if (authAcc && authAcc.accessToken) {
+            const client = new AuthClient('https://rustolia.eu')
+            const response = await client.logout(authAcc.accessToken)
+            
+            if (response && response.status === 'success') {
+                // Si la déconnexion est réussie, supprimer le compte
+                ConfigManager.removeAuthAccount(uuid)
+                ConfigManager.save()
+                return Promise.resolve()
+            } else {
+                log.error('Error during Azuriom Auth logout', response)
+                // En cas d'erreur, on continue et on supprime quand même le compte localement
+                // car l'API peut renvoyer des erreurs si le token est déjà invalide
+                ConfigManager.removeAuthAccount(uuid)
+                ConfigManager.save()
+                return Promise.resolve()
+            }
+        } else {
+            // Si pas de token, on supprime juste le compte
+            ConfigManager.removeAuthAccount(uuid)
+            ConfigManager.save()
+            return Promise.resolve()
+        }
+    } catch (err) {
+        log.error('Error during Azuriom Auth logout', err)
+        // En cas d'erreur, on supprime quand même le compte localement
+        // pour éviter que l'utilisateur ne reste bloqué
+        try {
+            ConfigManager.removeAuthAccount(uuid)
+            ConfigManager.save()
+        } catch (innerErr) {
+            log.error('Error removing account after logout failure', innerErr)
+        }
+        return Promise.resolve() // On continue même en cas d'erreur
     }
 }

@@ -7,7 +7,7 @@ const logger = LoggerUtil.getLogger('ConfigManager')
 
 const sysRoot = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Application Support' : process.env.HOME)
 
-const dataPath = path.join(sysRoot, '.helioslauncher')
+const dataPath = path.join(sysRoot, '.rustolialauncher')
 
 const launcherDir = require('@electron/remote').app.getPath('userData')
 
@@ -334,17 +334,19 @@ exports.updateMojangAuthAccount = function(uuid, accessToken){
  * @param {string} accessToken The accessToken of the authenticated account.
  * @param {string} username The username (usually email) of the authenticated account.
  * @param {string} displayName The in game name of the authenticated account.
+ * @param {string} userId The Azuriom user ID used for token generation (optional).
  * 
  * @returns {Object} The authenticated account object created by this action.
  */
-exports.addMojangAuthAccount = function(uuid, accessToken, username, displayName){
+exports.addMojangAuthAccount = function(uuid, accessToken, username, displayName, userId){
     config.selectedAccount = uuid
     config.authenticationDatabase[uuid] = {
         type: 'mojang',
         accessToken,
         username: username.trim(),
         uuid: uuid.trim(),
-        displayName: displayName.trim()
+        displayName: displayName.trim(),
+        azuriomUserId: userId // Store the Azuriom user ID for token generation
     }
     return config.authenticationDatabase[uuid]
 }

@@ -1,51 +1,52 @@
 {
-  "name": "helioslauncher",
-  "version": "2.2.1",
-  "productName": "Helios Launcher",
-  "description": "Modded Minecraft Launcher",
-  "author": "Daniel Scalzi (https://github.com/dscalzi/)",
-  "license": "UNLICENSED",
-  "homepage": "https://github.com/dscalzi/HeliosLauncher",
-  "bugs": {
-    "url": "https://github.com/dscalzi/HeliosLauncher/issues"
-  },
-  "private": true,
-  "main": "index.js",
-  "scripts": {
-    "start": "electron .",
-    "dist": "electron-builder build",
-    "dist:win": "npm run dist -- -w",
-    "dist:mac": "npm run dist -- -m",
-    "dist:linux": "npm run dist -- -l",
-    "lint": "eslint --config .eslintrc.json ."
-  },
-  "engines": {
-    "node": "20.x.x"
-  },
-  "dependencies": {
-    "@electron/remote": "^2.1.2",
-    "adm-zip": "^0.5.16",
-    "discord-rpc-patch": "^4.0.1",
-    "ejs": "^3.1.10",
-    "ejs-electron": "^3.0.0",
-    "electron-updater": "^6.3.9",
-    "fs-extra": "^11.1.1",
-    "github-syntax-dark": "^0.5.0",
-    "got": "^11.8.5",
-    "helios-core": "~2.2.4",
-    "helios-distribution-types": "^1.3.0",
-    "jquery": "^3.7.1",
-    "lodash.merge": "^4.6.2",
-    "semver": "^7.6.3",
-    "toml": "^3.0.0"
-  },
-  "devDependencies": {
-    "electron": "^33.2.1",
-    "electron-builder": "^25.1.8",
-    "eslint": "^8.57.1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/dscalzi/HeliosLauncher.git"
-  }
+    "name": "rustolialauncher",
+    "version": "1.0.0",
+    "productName": "Rustolia Launcher",
+    "description": "Minecraft Launcher for Rustolia",
+    "author": "ArtichautDev (https://github.com/ArtichautDev)",
+    "license": "MIT",
+    "homepage": "https://github.com/ArtichautDev/RustoliaLauncher",
+    "bugs": {
+        "url": "https://github.com/ArtichautDev/RustoliaLauncher/issues"
+    },
+    "private": true,
+    "main": "index.js",
+    "scripts": {
+        "start": "electron .",
+        "dist": "electron-builder build",
+        "dist:win": "npm run dist -- -w",
+        "dist:mac": "npm run dist -- -m",
+        "dist:linux": "npm run dist -- -l",
+        "lint": "eslint --config .eslintrc.json ."
+    },
+    "engines": {
+        "node": "20.x.x"
+    },
+    "dependencies": {
+        "@electron/remote": "^2.1.2",
+        "adm-zip": "^0.5.16",
+        "azuriom-auth": "^1.0.1",
+        "discord-rpc-patch": "^4.0.1",
+        "ejs": "^3.1.10",
+        "ejs-electron": "^3.0.0",
+        "electron-updater": "^6.3.9",
+        "fs-extra": "^11.1.1",
+        "github-syntax-dark": "^0.5.0",
+        "got": "^11.8.5",
+        "helios-core": "~2.2.4",
+        "helios-distribution-types": "^1.3.0",
+        "jquery": "^3.7.1",
+        "lodash.merge": "^4.6.2",
+        "semver": "^7.6.3",
+        "toml": "^3.0.0"
+    },
+    "devDependencies": {
+        "electron": "^33.2.1",
+        "electron-builder": "^25.1.8",
+        "eslint": "^8.57.1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ArtichautDev/RustoliaLauncher.git"
+    }
 }
