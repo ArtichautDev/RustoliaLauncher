@@ -45,8 +45,13 @@ exports.updateDetails = function(details){
 
 exports.shutdownRPC = function(){
     if(!client) return
-    client.clearActivity()
-    client.destroy()
-    client = null
-    activity = null
+    try {
+        client.clearActivity()
+        client.destroy()
+    } catch(error) {
+        logger.error('Error shutting down Discord RPC', error)
+    } finally {
+        client = null
+        activity = null
+    }
 }

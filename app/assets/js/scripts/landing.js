@@ -592,6 +592,7 @@ async function dlAsync(login = true) {
 
             // Init Discord Hook
             if(distro.rawDistribution.discord != null && serv.rawServer.discord != null){
+                // Discord RPC réactivé
                 DiscordWrapper.initRPC(distro.rawDistribution.discord, serv.rawServer.discord)
                 hasRPC = true
                 proc.on('close', (code, signal) => {

@@ -168,6 +168,19 @@
           }
         },
         {
+          "id": "de.maxhenkel.voicechat:voicechat:1.20.4-2.5.11@jar",
+          "name": "Simple Voice Chat",
+          "type": "FabricMod",
+          "artifact": {
+            "size": 8125303,
+            "url": "https://rustolia.eu/RustoliaCDN/voicechat-fabric.jar",
+            "MD5": "6358c86535c81e4646d723fe4e2ca9df"
+          },
+          "required": {
+            "value": false
+          }
+        },
+        {
           "id": "com.rustolia.auth:RustoliaAuthMod:1.0.0@jar",
           "name": "Rustolia Auth Mod",
           "type": "FabricMod",
@@ -178,13 +191,23 @@
           }
         },
         {
-          "id": "generated.library:fabric:api-0.95.4+1.20.4@jar",
-          "name": "fabric",
-          "type": "Library",
+          "id": "fuzs.resourcepackoverrides:resourcepackoverrides:20.4.2@jar",
+          "name": "Rustolia Resource Pack Overrides",
+          "type": "FabricMod",
           "artifact": {
-            "size": 2141107,
-            "url": "https://rustolia.eu/RustoliaCDN/fabric-api-0.95.4+1.20.4.jar",
-            "MD5": "e16ba73c962937a8a11515ecfd47d163"
+            "size": 86145,
+            "url": "https://rustolia.eu/RustoliaCDN/ResourcePackOverrides.jar",
+            "MD5": "7ee22ec83ca6433e842b048b409cad2d"
+          }
+        },
+        {
+          "id": "generated.library:fabric:api-0.97.2+1.20.4@jar",
+          "name": "fabric",
+          "type": "FabricMod",
+          "artifact": {
+            "size": 2187410,
+            "url": "https://rustolia.eu/RustoliaCDN/fabric-api-0.97.2+1.20.4.jar",
+            "MD5": "2733c159c2f7628983a96b442ca3f823"
           }
         },
         {
@@ -196,6 +219,83 @@
             "url": "https://rustolia.eu/RustoliaCDN/servers.x",
             "MD5": "7766afa75327dd5e1754efce9545e0f3",
             "path": "servers.dat"
+          }
+        },
+        {
+          "id": "voicechat-translations",
+          "name": "Voice Chat Translations",
+          "type": "File",
+          "artifact": {
+            "size": 1182,
+            "url": "https://rustolia.eu/RustoliaCDN/translations.properties",
+            "MD5": "4af29bbbf5267fe4298e80c2e6ebca63",
+            "path": "config/voicechat/translations.properties"
+          }
+        },
+        {
+          "id": "voicechat-username-cache",
+          "name": "Voice Chat Username Cache",
+          "type": "File",
+          "artifact": {
+            "size": 810,
+            "url": "https://rustolia.eu/RustoliaCDN/username-cache.json",
+            "MD5": "378a8e0a9e67b70396c69a6dfb9d4769",
+            "path": "config/voicechat/username-cache.json"
+          }
+        },
+        {
+          "id": "voicechat-client-properties",
+          "name": "Voice Chat Client Config",
+          "type": "File",
+          "artifact": {
+            "size": 4386,
+            "url": "https://rustolia.eu/RustoliaCDN/voicechat-client.properties",
+            "MD5": "ddd677438a72dc292023c9e798f992d4",
+            "path": "config/voicechat/voicechat-client.properties"
+          }
+        },
+        {
+          "id": "voicechat-server-properties",
+          "name": "Voice Chat Server Config",
+          "type": "File",
+          "artifact": {
+            "size": 2532,
+            "url": "https://rustolia.eu/RustoliaCDN/voicechat-server.properties",
+            "MD5": "084a30d5513bfc7365b9740156c8588d",
+            "path": "config/voicechat/voicechat-server.properties"
+          }
+        },
+        {
+          "id": "voicechat-volumes-properties",
+          "name": "Voice Chat Volumes Config",
+          "type": "File",
+          "artifact": {
+            "size": 93,
+            "url": "https://rustolia.eu/RustoliaCDN/voicechat-volumes.properties",
+            "MD5": "9d445fc85ab2b883b86be091c2cbbfb9",
+            "path": "config/voicechat/voicechat-volumes.properties"
+          }
+        },
+        {
+          "id": "rustolia-ressource-pack",
+          "name": "Rustolia Resource Pack",
+          "type": "File",
+          "artifact": {
+            "size": 2904305,
+            "url": "https://rustolia.eu/RustoliaCDN/RustoliaV3.zip",
+            "MD5": "c591943a1bc8c43385af97dd61d2a72b",
+            "path": "resourcepacks/RustoliaV3.zip"
+          }
+        },
+        {
+          "id": "resourcepackoverrides",
+          "name": "Rustolia Resource Pack overrides",
+          "type": "File",
+          "artifact": {
+            "size": 311,
+            "url": "https://rustolia.eu/RustoliaCDN/resourcepackoverrides.json",
+            "MD5": "f61db6625c72d64664b7f81ea5b68c73",
+            "path": "config/resourcepackoverrides.json"
           }
         }
       ]

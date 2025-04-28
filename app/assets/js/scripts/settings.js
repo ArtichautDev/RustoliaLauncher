@@ -2,6 +2,8 @@
 const os     = require('os')
 const semver = require('semver')
 
+const DropinModUtil  = require('./assets/js/dropinmodutil')
+
 const settingsState = {
     invalid: new Set()
 }
@@ -137,10 +139,7 @@ async function initSettingsValues(){
                     if(cVal === 'JavaExecutable'){
                         v.value = gFn.apply(null, gFnOpts)
                         await populateJavaExecDetails(v.value)
-                    } else if (cVal === 'DataDirectory'){
-                        v.value = gFn.apply(null, gFnOpts)
-                    } else if(cVal === 'JVMOptions'){
-                        v.value = gFn.apply(null, gFnOpts).join(' ')
+
                     } else {
                         v.value = gFn.apply(null, gFnOpts)
                     }
@@ -185,26 +184,11 @@ function saveSettingsValues(){
         if(typeof sFn === 'function'){
             if(v.tagName === 'INPUT'){
                 if(v.type === 'number' || v.type === 'text'){
-                    // Special Conditions
-                    if(cVal === 'JVMOptions'){
-                        if(!v.value.trim()) {
-                            sFnOpts.push([])
-                            sFn.apply(null, sFnOpts)
-                        } else {
-                            sFnOpts.push(v.value.trim().split(/\s+/))
-                            sFn.apply(null, sFnOpts)
-                        }
-                    } else {
-                        sFnOpts.push(v.value)
-                        sFn.apply(null, sFnOpts)
-                    }
+                    sFnOpts.push(v.value)
+                    sFn.apply(null, sFnOpts)
                 } else if(v.type === 'checkbox'){
                     sFnOpts.push(v.checked)
                     sFn.apply(null, sFnOpts)
-                    // Special Conditions
-                    if(cVal === 'AllowPrerelease'){
-                        changeAllowPrerelease(v.checked)
-                    }
                 }
             } else if(v.tagName === 'DIV'){
                 if(v.classList.contains('rangeSlider')){
@@ -320,7 +304,9 @@ function settingsSaveDisabled(v){
 
 function fullSettingsSave() {
     saveSettingsValues()
+    saveModConfiguration()
     ConfigManager.save()
+    saveDropinModConfiguration()
     saveShaderpackSettings()
 }
 
@@ -410,6 +396,7 @@ function bindAuthAccountLogOut(){
     })
 }
 
+let msAccDomElementCache
 /**
  * Process a log out.
  * 
@@ -555,6 +542,8 @@ async function resolveModsForUI(){
 
     const modStr = parseModulesForUI(distro.getServerById(serv).modules, false, servConf.mods)
 
+    // Ne plus afficher les mods requis
+    // document.getElementById('settingsReqModsContent').innerHTML = modStr.reqMods
     document.getElementById('settingsOptModsContent').innerHTML = modStr.optMods
 }
 
@@ -567,24 +556,48 @@ async function resolveModsForUI(){
  */
 function parseModulesForUI(mdls, submodules, servConf){
 
+    let reqMods = ''
     let optMods = ''
 
     for(const mdl of mdls){
 
         if(mdl.rawModule.type === Type.ForgeMod || mdl.rawModule.type === Type.LiteMod || mdl.rawModule.type === Type.LiteLoader || mdl.rawModule.type === Type.FabricMod){
 
-            const conf = servConf[mdl.getVersionlessMavenIdentifier()]
-            const val = typeof conf === 'object' ? conf.value : conf
+            if(mdl.getRequired().value){
 
-            optMods += `<div id="${mdl.getVersionlessMavenIdentifier()}" class="settingsBaseMod settings${submodules ? 'Sub' : ''}Mod" ${val ? 'enabled' : ''}>
-                <div class="settingsModContent">
-                    <div class="settingsModMainWrapper">
-                        <div class="settingsModStatus"></div>
-                        <div class="settingsModDetails">
-                            <span class="settingsModName">${mdl.rawModule.name}</span>
-                            <span class="settingsModVersion">v${mdl.mavenComponents.version}</span>
+                reqMods += `<div id="${mdl.getVersionlessMavenIdentifier()}" class="settingsBaseMod settings${submodules ? 'Sub' : ''}Mod" enabled>
+                    <div class="settingsModContent">
+                        <div class="settingsModMainWrapper">
+                            <div class="settingsModStatus"></div>
+                            <div class="settingsModDetails">
+                                <span class="settingsModName">${mdl.rawModule.name}</span>
+                                <span class="settingsModVersion">v${mdl.mavenComponents.version}</span>
+                            </div>
                         </div>
+                        <label class="toggleSwitch" reqmod>
+                            <input type="checkbox" checked>
+                            <span class="toggleSwitchSlider"></span>
+                        </label>
                     </div>
+                    ${mdl.subModules.length > 0 ? `<div class="settingsSubModContainer">
+                        ${Object.values(parseModulesForUI(mdl.subModules, true, servConf[mdl.getVersionlessMavenIdentifier()])).join('')}
+                    </div>` : ''}
+                </div>`
+
+            } else {
+
+                const conf = servConf[mdl.getVersionlessMavenIdentifier()]
+                const val = typeof conf === 'object' ? conf.value : conf
+
+                optMods += `<div id="${mdl.getVersionlessMavenIdentifier()}" class="settingsBaseMod settings${submodules ? 'Sub' : ''}Mod" ${val ? 'enabled' : ''}>
+                    <div class="settingsModContent">
+                        <div class="settingsModMainWrapper">
+                            <div class="settingsModStatus"></div>
+                            <div class="settingsModDetails">
+                                <span class="settingsModName">${mdl.rawModule.name}</span>
+                                <span class="settingsModVersion">v${mdl.mavenComponents.version}</span>
+                            </div>
+                        </div>
                         <label class="toggleSwitch">
                             <input type="checkbox" formod="${mdl.getVersionlessMavenIdentifier()}" ${val ? 'checked' : ''}>
                             <span class="toggleSwitchSlider"></span>
@@ -595,10 +608,12 @@ function parseModulesForUI(mdls, submodules, servConf){
                     </div>` : ''}
                 </div>`
 
+            }
         }
     }
 
     return {
+        reqMods,
         optMods
     }
 
@@ -654,6 +669,145 @@ function _saveModConfiguration(modConf){
         }
     }
     return modConf
+}
+
+// Drop-in mod elements.
+
+let CACHE_SETTINGS_MODS_DIR
+let CACHE_DROPIN_MODS
+
+/**
+ * Resolve any located drop-in mods for this server and
+ * populate the results onto the UI.
+ */
+async function resolveDropinModsForUI(){
+    const serv = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
+    CACHE_SETTINGS_MODS_DIR = path.join(ConfigManager.getInstanceDirectory(), serv.rawServer.id, 'mods')
+    CACHE_DROPIN_MODS = DropinModUtil.scanForDropinMods(CACHE_SETTINGS_MODS_DIR, serv.rawServer.minecraftVersion)
+
+    let dropinMods = ''
+
+    for(dropin of CACHE_DROPIN_MODS){
+        dropinMods += `<div id="${dropin.fullName}" class="settingsBaseMod settingsDropinMod" ${!dropin.disabled ? 'enabled' : ''}>
+                    <div class="settingsModContent">
+                        <div class="settingsModMainWrapper">
+                            <div class="settingsModStatus"></div>
+                            <div class="settingsModDetails">
+                                <span class="settingsModName">${dropin.name}</span>
+                                <div class="settingsDropinRemoveWrapper">
+                                    <button class="settingsDropinRemoveButton" remmod="${dropin.fullName}">${Lang.queryJS('settings.dropinMods.removeButton')}</button>
+                                </div>
+                            </div>
+                        </div>
+                        <label class="toggleSwitch">
+                            <input type="checkbox" formod="${dropin.fullName}" dropin ${!dropin.disabled ? 'checked' : ''}>
+                            <span class="toggleSwitchSlider"></span>
+                        </label>
+                    </div>
+                </div>`
+    }
+
+    document.getElementById('settingsDropinModsContent').innerHTML = dropinMods
+}
+
+/**
+ * Bind the remove button for each loaded drop-in mod.
+ */
+function bindDropinModsRemoveButton(){
+    const sEls = settingsModsContainer.querySelectorAll('[remmod]')
+    Array.from(sEls).map((v, index, arr) => {
+        v.onclick = async () => {
+            const fullName = v.getAttribute('remmod')
+            const res = await DropinModUtil.deleteDropinMod(CACHE_SETTINGS_MODS_DIR, fullName)
+            if(res){
+                document.getElementById(fullName).remove()
+            } else {
+                setOverlayContent(
+                    Lang.queryJS('settings.dropinMods.deleteFailedTitle', { fullName }),
+                    Lang.queryJS('settings.dropinMods.deleteFailedMessage'),
+                    Lang.queryJS('settings.dropinMods.okButton')
+                )
+                setOverlayHandler(null)
+                toggleOverlay(true)
+            }
+        }
+    })
+}
+
+/**
+ * Bind functionality to the file system button for the selected
+ * server configuration.
+ */
+function bindDropinModFileSystemButton(){
+    const fsBtn = document.getElementById('settingsDropinFileSystemButton')
+    fsBtn.onclick = () => {
+        DropinModUtil.validateDir(CACHE_SETTINGS_MODS_DIR)
+        shell.openPath(CACHE_SETTINGS_MODS_DIR)
+    }
+    fsBtn.ondragenter = e => {
+        e.dataTransfer.dropEffect = 'move'
+        fsBtn.setAttribute('drag', '')
+        e.preventDefault()
+    }
+    fsBtn.ondragover = e => {
+        e.preventDefault()
+    }
+    fsBtn.ondragleave = e => {
+        fsBtn.removeAttribute('drag')
+    }
+
+    fsBtn.ondrop = async e => {
+        fsBtn.removeAttribute('drag')
+        e.preventDefault()
+
+        DropinModUtil.addDropinMods(e.dataTransfer.files, CACHE_SETTINGS_MODS_DIR)
+        await reloadDropinMods()
+    }
+}
+
+/**
+ * Save drop-in mod states. Enabling and disabling is just a matter
+ * of adding/removing the .disabled extension.
+ */
+function saveDropinModConfiguration(){
+    for(dropin of CACHE_DROPIN_MODS){
+        const dropinUI = document.getElementById(dropin.fullName)
+        if(dropinUI != null){
+            const dropinUIEnabled = dropinUI.hasAttribute('enabled')
+            if(DropinModUtil.isDropinModEnabled(dropin.fullName) != dropinUIEnabled){
+                DropinModUtil.toggleDropinMod(CACHE_SETTINGS_MODS_DIR, dropin.fullName, dropinUIEnabled).catch(err => {
+                    if(!isOverlayVisible()){
+                        setOverlayContent(
+                            Lang.queryJS('settings.dropinMods.failedToggleTitle'),
+                            err.message,
+                            Lang.queryJS('settings.dropinMods.okButton')
+                        )
+                        setOverlayHandler(null)
+                        toggleOverlay(true)
+                    }
+                })
+            }
+        }
+    }
+}
+
+// Refresh the drop-in mods when F5 is pressed.
+// Only active on the mods tab.
+document.addEventListener('keydown', async (e) => {
+    if(getCurrentView() === VIEWS.settings && selectedSettingsTab === 'settingsTabMods'){
+        if(e.key === 'F5'){
+            await reloadDropinMods()
+            saveShaderpackSettings()
+            await resolveShaderpacksForUI()
+        }
+    }
+})
+
+async function reloadDropinMods(){
+    await resolveDropinModsForUI()
+    bindDropinModsRemoveButton()
+    bindDropinModFileSystemButton()
+    bindModsToggleSwitch()
 }
 
 // Shaderpack
@@ -783,7 +937,7 @@ Array.from(document.getElementsByClassName('settingsSwitchServerButton')).forEac
 function saveAllModConfigurations(){
     saveModConfiguration()
     ConfigManager.save()
-    saveShaderpackSettings()
+    saveDropinModConfiguration()
 }
 
 /**
@@ -802,8 +956,12 @@ function animateSettingsTabRefresh(){
  */
 async function prepareModsTab(first){
     await resolveModsForUI()
+    await resolveDropinModsForUI()
     await resolveShaderpacksForUI()
+    bindDropinModsRemoveButton()
+    bindDropinModFileSystemButton()
     bindShaderpackButton()
+    bindModsToggleSwitch()
     await loadSelectedServerOnModsTab()
 }
 
@@ -820,6 +978,7 @@ const settingsMemoryTotal     = document.getElementById('settingsMemoryTotal')
 const settingsMemoryAvail     = document.getElementById('settingsMemoryAvail')
 const settingsJavaExecDetails = document.getElementById('settingsJavaExecDetails')
 const settingsJavaReqDesc     = document.getElementById('settingsJavaReqDesc')
+const settingsJvmOptsLink     = document.getElementById('settingsJvmOptsLink')
 
 // Bind on change event for min memory container.
 settingsMinRAMRange.onchange = (e) => {
@@ -1017,6 +1176,23 @@ function populateJavaReqDesc(server) {
     settingsJavaReqDesc.innerHTML = Lang.queryJS('settings.java.requiresJava', { major: server.effectiveJavaOptions.suggestedMajor })
 }
 
+function populateJvmOptsLink(server) {
+    const major = server.effectiveJavaOptions.suggestedMajor
+    settingsJvmOptsLink.innerHTML = Lang.queryJS('settings.java.availableOptions', { major: major })
+    if(major >= 12) {
+        settingsJvmOptsLink.href = `https://docs.oracle.com/en/java/javase/${major}/docs/specs/man/java.html#extra-options-for-java`
+    }
+    else if(major >= 11) {
+        settingsJvmOptsLink.href = 'https://docs.oracle.com/en/java/javase/11/tools/java.html#GUID-3B1CE181-CD30-4178-9602-230B800D4FAE'
+    }
+    else if(major >= 9) {
+        settingsJvmOptsLink.href = `https://docs.oracle.com/javase/${major}/tools/java.htm`
+    }
+    else {
+        settingsJvmOptsLink.href = `https://docs.oracle.com/javase/${major}/docs/technotes/tools/${process.platform === 'win32' ? 'windows' : 'unix'}/java.html`
+    }
+}
+
 function bindMinMaxRam(server) {
     // Store maximum memory values.
     const SETTINGS_MAX_MEMORY = ConfigManager.getAbsoluteMaxRAM(server.rawServer.javaOptions?.ram)
@@ -1035,9 +1211,10 @@ function bindMinMaxRam(server) {
 async function prepareJavaTab(){
     const server = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
     bindMinMaxRam(server)
-    bindRangeSlider()
+    bindRangeSlider(server)
     populateMemoryStatus()
     populateJavaReqDesc(server)
+    // JVM Options désactivées, ne plus appeler populateJvmOptsLink
 }
 
 /**
