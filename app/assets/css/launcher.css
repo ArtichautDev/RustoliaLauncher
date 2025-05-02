@@ -77,6 +77,8 @@ body, button {
     transition: background-color 1s ease;
     /*background-color: rgba(0, 0, 0, 0.5);*/
     -webkit-user-select: none;
+    user-select: none;
+    user-select: none;
 }
 
 /* Undraggable region on the top of the frame. */
@@ -360,12 +362,14 @@ body, button {
 #welcomeButton:hover #welcomeSVG,
 #welcomeButton:focus #welcomeSVG {
     -webkit-filter: drop-shadow(0px 0px 2px #fff);
+    filter: drop-shadow(0px 0px 2px #fff);
 }
 #welcomeButton:active #welcomeSVG .arrowLine {
     stroke: #c7c7c7;
 }
 #welcomeButton:active #welcomeSVG {
     -webkit-filter: drop-shadow(0px 0px 2px #c7c7c7);
+    filter: drop-shadow(0px 0px 2px #c7c7c7);
 }
 #welcomeButton:disabled #welcomeSVG .arrowLine {
     stroke: rgba(255, 255, 255, 0.75);
@@ -384,7 +388,7 @@ body, button {
 
 /* Styles for dimmer login span. */
 .loginSpanDim {
-    font-size: 12px;
+    font-size: 10px;
     color: #848484;
     font-weight: bold;
 }
@@ -398,7 +402,7 @@ body, button {
     height: 100%;
     width: 100%;
     transition: filter 0.25s ease;
-    background: rgba(0, 0, 0, 0.50);
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7));
 }
 
 /* Login cancel button styles. */
@@ -469,7 +473,7 @@ body, button {
     justify-content: center;
     align-items: center;
     height: 100%;
-    padding: 0px 25px;
+    padding: 0px 20px;
 }
 
 /* Login form. */
@@ -478,6 +482,12 @@ body, button {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background-color: rgba(15, 15, 20, 0.7);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+    min-width: 280px;
+    max-width: 320px;
 }
 
 /* Login form anchor styles. */
@@ -511,11 +521,11 @@ body, button {
 /* Header on login view. */
 #loginSubheader {
     font-family: 'Poppins', sans-serif;
-    font-weight: 500;
-    margin-bottom: 25px;
-    font-size: 12px;
-    letter-spacing: 1px;
-    font-weight: bold;
+    font-weight: 600;
+    margin-bottom: 15px;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    color: #ffffff;
 }
 
 /* Container to organize login field elements. */
@@ -523,28 +533,49 @@ body, button {
     position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+/* Input wrapper for icon positioning */
+.inputWrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* Label styling */
+.loginFieldContainer label {
+    font-size: 12px;
+    margin-bottom: 5px;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
 }
 
 /* SVG icons on the login view. */
 .loginSVG {
     fill: #fff;
-    height: 20px;
-    width: 20px;
+    height: 16px;
+    width: 16px;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.7;
+    pointer-events: none;
 }
 
 /* Span which displays errors related to login field content. */
 .loginErrorSpan {
     font-family: 'Poppins', sans-serif;
     font-weight: 500;
-    font-weight: bold;
-    font-size: 8px;
-    color: #ff1b0c;
+    font-size: 10px;
+    color: #ff3c30;
     width: 100%;
     text-align: right;
     position: absolute;
-    top: 7px;
+    top: -16px;
     opacity: 0;
     transition: 0.25s ease;
 }
@@ -575,32 +606,35 @@ body, button {
 .loginField {
     font-family: 'Poppins', sans-serif;
     font-weight: 400;
-    background: none;
-    border-width: 1.5px 0px 0px 0px;
-    border-style: solid;
-    width: 250px;
-    margin-bottom: 20px;
-    border-color: #fff;
-    color: rgba(255, 255, 255, 0.75);
-    font-weight: bold;
-    text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1.5px solid rgba(255, 255, 255, 0.6);
+    border-radius: 4px;
+    width: 100%;
+    margin-bottom: 15px;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: normal;
+    text-align: left;
     box-sizing: border-box;
-    padding: 7.5px;
-    font-size: 10px;
-    letter-spacing: 1px;
+    padding: 8px 12px;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
 }
 .loginField:focus {
     outline: none;
+    border-color: #ffffff;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.15);
 }
 .loginField:disabled {
     color: rgba(255, 255, 255, 0.50);
 }
 .loginField::-webkit-input-placeholder {
-    color: rgba(255, 255, 255, 0.75);
-    font-size: 10px;
-    letter-spacing: 1px;
-    text-align: center;
-    font-weight: bold;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    text-align: left;
+    font-weight: normal;
 }
 .loginField:focus::-webkit-input-placeholder {
     color: transparent;
@@ -611,34 +645,49 @@ body, button {
     margin-bottom: 13px;
 }
 
-/* Container which contains the forgot and remember options. */
+/* Container which contains the remember option. */
 #loginOptions {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     width: 100%;
+    margin-bottom: 5px;
+    align-items: center;
+}
+
+/* Container for the forgot password link */
+.forgotPasswordContainer {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    margin-bottom: 15px;
 }
 
 /* Remember option text. */
 #loginRememberText {
-    padding-right: 10px;
+    padding-left: 6px;
     transition: 0.25s ease;
+    font-size: 11px;
 }
 
 /* Login button styles. */
 #loginButton {
-    background: none;
-    font-weight: bold;
-    letter-spacing: 2px;
+    background: #ffffff;
+    color: #212529;
+    font-weight: 600;
+    letter-spacing: 0.5px;
     border: none;
-    padding: 15px 5px;
+    border-radius: 4px;
+    padding: 8px 20px;
     margin: 10px 0px;
     cursor: pointer;
-    position: relative;
-    right: -20px;
-    transition: 0.5s ease;
+    width: 100%;
+    transition: 0.3s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    font-size: 12px;
 }
 #loginButton:disabled {
-    color: rgba(255, 255, 255, 0.75);
+    color: rgba(100, 100, 100, 0.75);
+    background: rgba(255, 255, 255, 0.6);
     pointer-events: none;
 }
 #loginButton[loading] {
@@ -646,8 +695,10 @@ body, button {
 }
 #loginButton:hover,
 #loginButton:focus {
-    text-shadow: 0px 0px 20px #fff;
+    background: #f8f9fa;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     outline: none;
+    transform: translateY(-1px);
 }
 #loginButton:active {
     color: #c7c7c7;
@@ -665,12 +716,14 @@ body, button {
 #loginButton:hover #loginSVG,
 #loginButton:focus #loginSVG {
     -webkit-filter: drop-shadow(0px 0px 2px #fff);
+    filter: drop-shadow(0px 0px 2px #fff);
 }
 #loginButton:active #loginSVG .arrowLine {
     stroke: #c7c7c7;
 }
 #loginButton:active #loginSVG {
     -webkit-filter: drop-shadow(0px 0px 2px #c7c7c7);
+    filter: drop-shadow(0px 0px 2px #c7c7c7);
 }
 #loginButton:disabled #loginSVG .arrowLine {
     stroke: rgba(255, 255, 255, 0.75);
@@ -679,6 +732,8 @@ body, button {
 #loginButtonContent {
     display: flex;
     align-items: center;
+    justify-content: center;
+    font-size: 12px;
 }
 
 #loginButton .circle-loader,
@@ -769,18 +824,15 @@ body, button {
     margin-left: 20px;
     height: 16px;
     width: 16px;
-    border-radius: 50%;
-    border: 2px solid rgba(255,255,255,0);
-    border-top-color: #ffffff;
-    border-right-color: #ffffff;
-    border-left-color: rgba(255, 255, 255, 0.50);
-    border-bottom-color: rgba(255, 255, 255, 0.50);
-    animation: single2 4s infinite linear;
 }
 
 @keyframes single2 {
-    0% {
-        transform: rotate(0deg);
+0% {
+transform: rotate(0deg);
+}
+100% {
+transform: rotate(720deg);
+}
     }
     100% {
         transform: rotate(720deg);
@@ -802,10 +854,12 @@ body, button {
 
 /* Disclaimer text styles. */
 .loginDisclaimerText {
-    font-size: 7px;
-    color: #848484;
-    font-weight: bold;
+    font-size: 9px;
     text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 3px 0;
+    font-weight: normal;
+    font-family: 'Poppins', sans-serif;
 }
 
 /* * *
@@ -815,68 +869,71 @@ body, button {
 /* Checkbox container. */
 #checkmarkContainer {
     display: flex;
-    justify-content: flex-end;
     align-items: center;
+    justify-content: flex-start;
     position: relative;
     cursor: pointer;
-    font-size: 22px;
+    font-size: 11px;
     -webkit-user-select: none;
+    user-select: none;
 }
 
 /* Hide the default checkbox. */
-#checkmarkContainer input {
+#loginRememberOption {
+    position: absolute;
     opacity: 0;
     cursor: pointer;
-    position: absolute;
+    height: 0;
+    width: 0;
 }
 
 /* Create a custom checkbox. */
 .loginCheckmark {
     position: relative;
-    height: 10px;
-    width: 10px;
-    border: 1px solid #848484;
-    border-radius: 1px;
-    background: none;
-    transition: 0.25s ease;
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1.5px solid rgba(255, 255, 255, 0.6);
+    border-radius: 3px;
+    margin-right: 6px;
+    transition: all 0.2s ease;
 }
-/* On hover and focus, add a grey border color. */
-#checkmarkContainer:hover input ~ *,
-#checkmarkContainer input:focus ~ * {
-    color: #a2a2a2;
-    border-color: #a2a2a2;
+
+/* Show the checkmark when checked. */
+#checkmarkContainer input:checked ~ .loginCheckmark {
+    border-color: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.2);
 }
-/* On keydown, darken the checkbox a bit. */
-#checkmarkContainer input:active ~ *:not(#loginRememberText) {
-    color: #8d8d8d;
-    border-color: #8d8d8d;
-}
-#checkmarkContainer[disabled] {
-    pointer-events: none;
-}
-/* For checked -> #checkmarkContainer input:checked ~ * */
+
 /* Create the checkmark/indicator (hidden when not checked). */
 .loginCheckmark:after {
     content: "";
+    position: absolute;
     display: none;
 }
-/* Show the checkmark when checked. */
+
+/* Show the checkmark when checked */
 #checkmarkContainer input:checked ~ .loginCheckmark:after {
     display: block;
 }
+
 /* Style the checkmark/indicator. */
 #checkmarkContainer .loginCheckmark:after {
     position: absolute;
-    left: 3.5px;
-    top: 0.5px;
-    width: 2px;
-    height: 6px;
-    border: solid #a2a2a2;
+    left: 4px;
+    top: 1px;
+    width: 4px;
+    height: 8px;
+    border: solid white;
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
 }
 
 /*
+{{ ... }}
+    100% {
+        transform: rotate(720deg);
 #login_filter {
     height: calc(100% - 22px);
     width: 100%;
@@ -1302,6 +1359,7 @@ body, button {
 /* Remove spin button from number inputs. */
 #settingsContainer input[type=number]::-webkit-inner-spin-button {
     -webkit-appearance: none;
+    appearance: none;
 }
 
 /* Default styles for text/number inputs. */
@@ -2788,6 +2846,8 @@ input:checked + .toggleSwitchSlider:before {
     align-items: center;
     margin-bottom: 10px;
     -webkit-user-select: none;
+    user-select: none;
+    user-select: none;
     position: absolute;
     bottom: 15px;
     right: 0px;
@@ -2813,6 +2873,7 @@ input:checked + .toggleSwitchSlider:before {
 #newsNavigateRight:hover #newsNavigationRightSVG,
 #newsNavigateRight:focus #newsNavigationRightSVG {
     -webkit-filter: drop-shadow(0px 0px 2px #fff);
+    filter: drop-shadow(0px 0px 2px #fff);
 }
 #newsNavigateLeft:active #newsNavigationLeftSVG .arrowLine,
 #newsNavigateRight:active #newsNavigationRightSVG .arrowLine {
@@ -2821,6 +2882,7 @@ input:checked + .toggleSwitchSlider:before {
 #newsNavigateLeft:active #newsNavigationLeftSVG,
 #newsNavigateRight:active #newsNavigationRightSVG {
     -webkit-filter: drop-shadow(0px 0px 2px #c7c7c7);
+    filter: drop-shadow(0px 0px 2px #c7c7c7);
 }
 #newsNavigateLeft:disabled #newsNavigationLeftSVG .arrowLine,
 #newsNavigateRight:disabled #newsNavigationRightSVG .arrowLine {
@@ -3100,14 +3162,36 @@ input:checked + .toggleSwitchSlider:before {
 
 /* Social media icon shared styles. */
 .mediaSVG {
+    width: 26px;
+    height: 26px;
+    max-width: 32px;
+    max-height: 32px;
+    display: block;
+    transition: filter 0.2s, opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+    user-select: none;
+}
+
+.mediaSVG:hover {
+    transform: scale(1.15) rotate(-4deg);
+    filter: brightness(1.2) drop-shadow(0 0 6px #7289da);
+}
+
+
+/* Assure que l'icône Discord est bien homogène */
+#discordURL .mediaSVG {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+    max-width: 32px !important;
+    max-height: 32px !important;
     fill: #ffffff;
-    height: 24px;
     transition: 0.25s ease;
     cursor: pointer;
-    width: auto;
     -webkit-filter: brightness(1);
     filter: brightness(1);
 }
+
 .mediaSVG:hover,
 .mediaURL:focus .mediaSVG,
 .mediaSVG:active {
@@ -3386,12 +3470,14 @@ input:checked + .toggleSwitchSlider:before {
 #newsButton:hover #newsButtonSVG,
 #newsButton:focus #newsButtonSVG {
     -webkit-filter: drop-shadow(0px 0px 2px #fff);
+    filter: drop-shadow(0px 0px 2px #fff);
 }
 #newsButton:active #newsButtonSVG .arrowLine {
     stroke: #c7c7c7;
 }
 #newsButton:active #newsButtonSVG {
     -webkit-filter: drop-shadow(0px 0px 2px #c7c7c7);
+    filter: drop-shadow(0px 0px 2px #c7c7c7);
 }
 #newsButton:disabled #newsButtonSVG .arrowLine {
     stroke: rgba(255, 255, 255, 0.75);
@@ -3519,6 +3605,7 @@ input:checked + .toggleSwitchSlider:before {
     height: 3px;
     width: 265px;
     -webkit-appearance: none;
+    appearance: none;
 }
 #launch_progress[value]::-webkit-progress-bar {
     background-color: transparent;

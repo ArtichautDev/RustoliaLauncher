@@ -80,19 +80,16 @@ async function showMainUI(data){
             validateSelectedAccount()
         }
 
-        if(ConfigManager.isFirstLaunch()){
-            currentView = VIEWS.welcome
-            $(VIEWS.welcome).fadeIn(1000)
+        // Désactivation de la page d'accueil, redirection directe vers login ou landing
+        // Ignore volontairement la condition de premier lancement (ConfigManager.isFirstLaunch())
+        if(isLoggedIn){
+            currentView = VIEWS.landing
+            $(VIEWS.landing).fadeIn(1000)
         } else {
-            if(isLoggedIn){
-                currentView = VIEWS.landing
-                $(VIEWS.landing).fadeIn(1000)
-            } else {
-                loginCancelEnabled(false)
-                loginViewOnSuccess = VIEWS.landing
-                currentView = VIEWS.login
-                $(VIEWS.login).fadeIn(1000)
-            }
+            loginCancelEnabled(false)
+            loginViewOnSuccess = VIEWS.landing
+            currentView = VIEWS.login
+            $(VIEWS.login).fadeIn(1000)
         }
 
         setTimeout(() => {

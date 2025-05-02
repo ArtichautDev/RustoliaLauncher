@@ -57,7 +57,6 @@ function shakeError(element){
 function validateEmail(value){
     if(value){
         if(!basicEmail.test(value) && !validUsername.test(value)){
-            showError(loginEmailError, Lang.queryJS('login.error.invalidValue'))
             loginDisabled(true)
             lu = false
         } else {
@@ -69,7 +68,6 @@ function validateEmail(value){
         }
     } else {
         lu = false
-        showError(loginEmailError, Lang.queryJS('login.error.requiredValue'))
         loginDisabled(true)
     }
 }
@@ -88,7 +86,6 @@ function validatePassword(value){
         }
     } else {
         lp = false
-        showError(loginPasswordError, Lang.queryJS('login.error.invalidValue'))
         loginDisabled(true)
     }
 }
@@ -222,7 +219,6 @@ loginButton.addEventListener('click', () => {
         loginLoading(false)
         if(displayableError && displayableError.requires2fa) {
             login2faContainer.style.display = 'block'
-            showError(login2faError, Lang.queryJS('login.error.requiredValue'))
             formDisabled(false)
             login2faCode.focus()
             return

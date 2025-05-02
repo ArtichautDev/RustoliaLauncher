@@ -1,6 +1,6 @@
 {
     "name": "rustolialauncher",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "productName": "Rustolia Launcher",
     "description": "Minecraft Launcher for Rustolia",
     "author": "ArtichautDev (https://github.com/ArtichautDev)",
@@ -38,7 +38,6 @@
         "jquery": "^3.7.1",
         "lodash.merge": "^4.6.2",
         "semver": "^7.6.3",
-        "skinview3d": "^3.2.0",
         "toml": "^3.0.0"
     },
     "devDependencies": {

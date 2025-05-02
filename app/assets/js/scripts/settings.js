@@ -417,7 +417,14 @@ function processLogOut(val, isLastAccount){
         
         if(isLastAccount) {
             loginCancelEnabled(false)
-            switchView(getCurrentView(), VIEWS.login, 500, 500)
+            switchView(getCurrentView(), VIEWS.login, 500, 500, () => {
+                // Réinitialiser le champ 2FA et autres champs
+                document.getElementById('login2faContainer').style.display = 'none'
+                document.getElementById('login2faCode').value = ''
+                document.getElementById('login2faError').style.opacity = 0
+                document.getElementById('loginUsername').value = ''
+                document.getElementById('loginPassword').value = ''
+            })
         } else if(uuid === prevSelAcc.uuid) {
             const selAcc = ConfigManager.getSelectedAccount()
             refreshAuthAccountSelected(selAcc.uuid)
