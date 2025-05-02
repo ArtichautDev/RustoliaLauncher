@@ -873,8 +873,8 @@ function displayNewsCards(articles) {
         // Créer la carte
         const card = document.createElement('div')
         card.className = 'newsCard'
-        card.style.width = '250px' // Réduire la largeur
-        card.style.height = '150px' // Réduire la hauteur
+        card.style.width = '45vh' // Réduire la largeur
+        card.style.height = '25vh' // Réduire la hauteur
         card.style.marginBottom = '8px'
         card.style.border = '1px solid rgba(255, 255, 255, 0.2)'
         card.style.borderRadius = '8px' // Bords moins arrondis pour correspondre à la taille réduite
@@ -885,7 +885,7 @@ function displayNewsCards(articles) {
         card.style.backgroundColor = 'rgba(0, 0, 0, 0.5)'
         
         card.innerHTML = `
-            <div class="newsCardImage" style="background-image: url('${imageUrl}'); background-size: cover; background-position: center; height: 80px;"></div>
+            <div class="newsCardImage" style="background-image: url('${imageUrl}'); background-size: cover; background-position: center;"></div>
             <div class="newsCardOverlay" style="padding: 6px;">
                 <h3 class="newsCardTitle" style="margin: 0 0 3px 0; font-size: 12px; color: #ffffff; font-weight: 500; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">${article.title}</h3>
                 <div class="newsCardMeta" style="font-size: 10px; color: rgba(255, 255, 255, 0.8);">
