@@ -21,7 +21,7 @@
         "largeImageKey": "logo"
       },
       "mainServer": true,
-      "autoconnect": true,
+      "autoconnect": false,
       "modules": [
         {
           "id": "net.fabricmc:fabric-loader:0.15.6",
@@ -185,19 +185,9 @@
           "name": "Rustolia Auth Mod",
           "type": "FabricMod",
           "artifact": {
-            "size": 6442,
+            "size": 7449986,
             "url": "https://rustolia.eu/RustoliaCDN/RustoliaAuth.jar",
-            "MD5": "2370f7b52435e5b0b94e1474af5eac48"
-          }
-        },
-        {
-          "id": "fuzs.resourcepackoverrides:resourcepackoverrides:20.4.2@jar",
-          "name": "Rustolia Resource Pack Overrides",
-          "type": "FabricMod",
-          "artifact": {
-            "size": 86145,
-            "url": "https://rustolia.eu/RustoliaCDN/ResourcePackOverrides.jar",
-            "MD5": "7ee22ec83ca6433e842b048b409cad2d"
+            "MD5": "a0241242193929bc8c884f12c0dab227"
           }
         },
         {
@@ -208,17 +198,6 @@
             "size": 2187410,
             "url": "https://rustolia.eu/RustoliaCDN/fabric-api-0.97.2+1.20.4.jar",
             "MD5": "2733c159c2f7628983a96b442ca3f823"
-          }
-        },
-        {
-          "id": "servers.dat",
-          "name": "servers.dat",
-          "type": "File",
-          "artifact": {
-            "size": 160,
-            "url": "https://rustolia.eu/RustoliaCDN/servers.x",
-            "MD5": "7766afa75327dd5e1754efce9545e0f3",
-            "path": "servers.dat"
           }
         },
         {
@@ -274,28 +253,6 @@
             "url": "https://rustolia.eu/RustoliaCDN/voicechat-volumes.properties",
             "MD5": "9d445fc85ab2b883b86be091c2cbbfb9",
             "path": "config/voicechat/voicechat-volumes.properties"
-          }
-        },
-        {
-          "id": "rustolia-ressource-pack",
-          "name": "Rustolia Resource Pack",
-          "type": "File",
-          "artifact": {
-            "size": 2904305,
-            "url": "https://rustolia.eu/RustoliaCDN/RustoliaV3.zip",
-            "MD5": "c591943a1bc8c43385af97dd61d2a72b",
-            "path": "resourcepacks/RustoliaV3.zip"
-          }
-        },
-        {
-          "id": "resourcepackoverrides",
-          "name": "Rustolia Resource Pack overrides",
-          "type": "File",
-          "artifact": {
-            "size": 311,
-            "url": "https://rustolia.eu/RustoliaCDN/resourcepackoverrides.json",
-            "MD5": "f61db6625c72d64664b7f81ea5b68c73",
-            "path": "config/resourcepackoverrides.json"
           }
         }
       ]

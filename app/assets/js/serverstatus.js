@@ -42,8 +42,7 @@ exports.getStatus = function(address, port = 25565){
                         online: true,
                         version: server_info[2].replace(/\u0000/g, ''),
                         motd: server_info[3].replace(/\u0000/g, ''),
-                        onlinePlayers: server_info[4].replace(/\u0000/g, ''),
-                        maxPlayers: server_info[5].replace(/\u0000/g,'')
+                        onlinePlayers: server_info[4].replace(/\u0000/g, '')
                     })
                 } else {
                     resolve({

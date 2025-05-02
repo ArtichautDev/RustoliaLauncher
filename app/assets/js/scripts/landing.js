@@ -7,6 +7,9 @@ const {
     MojangRestAPI,
     getServerStatus
 }                             = require('helios-core/mojang')
+
+// Variable déclarations
+let newsAlertShown = false
 const {
     RestResponseStatus,
     isDisplayableError,
@@ -44,18 +47,53 @@ const loggerLanding = LoggerUtil.getLogger('Landing')
 
 /* Launch Progress Wrapper Functions */
 
+// Animation pour les points de chargement
+let loadingDotsInterval
+let dotsCount = 0
+
 /**
- * Show/hide the loading area.
+ * Fonction pour animer les points de chargement
+ */
+function animateLoadingDots() {
+    const loadingDots = document.getElementById('loading_dots')
+    if (!loadingDots) return // Sécurité si l'élément n'existe pas
+    
+    // Arrêter l'animation précédente si elle existe
+    if (loadingDotsInterval) {
+        clearInterval(loadingDotsInterval)
+    }
+    
+    // Démarrer une nouvelle animation
+    loadingDotsInterval = setInterval(() => {
+        dotsCount = (dotsCount + 1) % 4
+        let dots = ''
+        for (let i = 0; i < dotsCount; i++) {
+            dots += '.'
+        }
+        loadingDots.textContent = dots
+    }, 400) // Changer toutes les 400ms
+}
+
+/**
+ * Show loading for the launch area.
  * 
- * @param {boolean} loading True if the loading area should be shown, otherwise false.
+ * @param {boolean} loading True if loading, false otherwise.
  */
 function toggleLaunchArea(loading){
     if(loading){
-        launch_details.style.display = 'flex'
+        // Transition vers l'état de chargement
+        launch_details.style.display = 'block'
         launch_content.style.display = 'none'
+        // Démarrer l'animation des points de chargement
+        animateLoadingDots()
     } else {
+        // Retour à l'état normal
         launch_details.style.display = 'none'
-        launch_content.style.display = 'inline-flex'
+        launch_content.style.display = 'block'
+        // Arrêter l'animation
+        if (loadingDotsInterval) {
+            clearInterval(loadingDotsInterval)
+        }
     }
 }
 
@@ -171,6 +209,8 @@ function updateSelectedServer(serv){
 }
 // Real text is set in uibinder.js on distributionIndexDone.
 server_selection_button.innerHTML = '&#8226; ' + Lang.queryJS('landing.selectedServer.loading')
+// Cacher le bouton de sélection de serveur
+server_selection_button.style.display = 'none'
 server_selection_button.onclick = async e => {
     e.target.blur()
     await toggleServerSelection(true)
@@ -222,8 +262,12 @@ const refreshServerStatus = async (fade = false) => {
         // Use play.rustolia.eu as the server
         const servStat = await getServerStatus(47, '178.32.43.27', 25565)
         console.log(servStat)
-        pLabel = Lang.queryJS('landing.serverStatus.players')
-        pVal = servStat.players.online + '/' + servStat.players.max
+        pLabel = '' // Vider le label pour n'afficher que la valeur formatée
+        // Style complètement remanié pour le rectangle
+        pVal = `<div style="display: block !important; width: 250px !important; background-color: rgba(60, 60, 60, 0.8) !important; border-radius: 8px !important; padding: 10px 15px !important; margin: 0 !important; box-sizing: border-box !important; text-align: left !important; position: relative !important; left: 0 !important;">
+    <span style="color: #7eff7e !important; font-size: 16px !important; display: inline-block !important; margin-right: 5px !important;">&#8226;</span>
+    <span style="font-size: 14px !important; color: white !important; text-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;">${servStat.players.online} joueurs connectés</span>
+</div>`
 
     } catch (err) {
         loggerLanding.warn('Unable to refresh server status, assuming offline.')
@@ -627,78 +671,7 @@ const newsNavigationStatus          = document.getElementById('newsNavigationSta
 const newsArticleContentScrollable  = document.getElementById('newsArticleContentScrollable')
 const nELoadSpan                    = document.getElementById('nELoadSpan')
 
-// News slide caches.
-let newsActive = false
-let newsGlideCount = 0
-
-/**
- * Show the news UI via a slide animation.
- * 
- * @param {boolean} up True to slide up, otherwise false. 
- */
-function slide_(up){
-    const lCUpper = document.querySelector('#landingContainer > #upper')
-    const lCLLeft = document.querySelector('#landingContainer > #lower > #left')
-    const lCLCenter = document.querySelector('#landingContainer > #lower > #center')
-    const lCLRight = document.querySelector('#landingContainer > #lower > #right')
-    const newsBtn = document.querySelector('#landingContainer > #lower > #center #content')
-    const landingContainer = document.getElementById('landingContainer')
-    const newsContainer = document.querySelector('#landingContainer > #newsContainer')
-
-    newsGlideCount++
-
-    if(up){
-        lCUpper.style.top = '-200vh'
-        lCLLeft.style.top = '-200vh'
-        lCLCenter.style.top = '-200vh'
-        lCLRight.style.top = '-200vh'
-        newsBtn.style.top = '130vh'
-        newsContainer.style.top = '0px'
-        //date.toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'})
-        //landingContainer.style.background = 'rgba(29, 29, 29, 0.55)'
-        landingContainer.style.background = 'rgba(0, 0, 0, 0.50)'
-        setTimeout(() => {
-            if(newsGlideCount === 1){
-                lCLCenter.style.transition = 'none'
-                newsBtn.style.transition = 'none'
-            }
-            newsGlideCount--
-        }, 2000)
-    } else {
-        setTimeout(() => {
-            newsGlideCount--
-        }, 2000)
-        landingContainer.style.background = null
-        lCLCenter.style.transition = null
-        newsBtn.style.transition = null
-        newsContainer.style.top = '100%'
-        lCUpper.style.top = '0px'
-        lCLLeft.style.top = '0px'
-        lCLCenter.style.top = '0px'
-        lCLRight.style.top = '0px'
-        newsBtn.style.top = '10px'
-    }
-}
-
-// Bind news button.
-document.getElementById('newsButton').onclick = () => {
-    // Toggle tabbing.
-    if(newsActive){
-        $('#landingContainer *').removeAttr('tabindex')
-        $('#newsContainer *').attr('tabindex', '-1')
-    } else {
-        $('#landingContainer *').attr('tabindex', '-1')
-        $('#newsContainer, #newsContainer *, #lower, #lower #center *').removeAttr('tabindex')
-        if(newsAlertShown){
-            $('#newsButtonAlert').fadeOut(2000)
-            newsAlertShown = false
-            ConfigManager.setNewsCacheDismissed(true)
-            ConfigManager.save()
-        }
-    }
-    slide_(!newsActive)
-    newsActive = !newsActive
-}
+// Variables pour la gestion des actualités
 
 // Array to store article meta.
 let newsArr = null
@@ -765,7 +738,7 @@ function reloadNews(){
     })
 }
 
-let newsAlertShown = false
+
 
 /**
  * Show the news alert indicating there is new news.
@@ -793,124 +766,56 @@ async function digestMessage(str) {
  * content has finished loading and transitioning.
  */
 async function initNews(){
-
-    setNewsLoading(true)
-
+    // Charger les actualités
     const news = await loadNews()
-
     newsArr = news?.articles || null
 
-    if(newsArr == null){
-        // News Loading Failed
-        setNewsLoading(false)
+    if(newsArr == null || newsArr.length === 0){
+        // Pas d'actualités ou erreur de chargement
+        console.log('Aucune actualité disponible ou erreur de chargement')
+        return
+    }
 
-        await $('#newsErrorLoading').fadeOut(250).promise()
-        await $('#newsErrorFailed').fadeIn(250).promise()
+    // Gestion du cache pour la notification (conservé pour compatibilité)
+    const cached = ConfigManager.getNewsCache()
+    const newHash = await digestMessage(newsArr[0].content)
+    let newCached = false
 
-    } else if(newsArr.length === 0) {
-        // No News Articles
-        setNewsLoading(false)
-
+    if(cached === null || cached.date < newsArr[0].date || cached.content !== newHash){
+        if(cached !== null){
+            // Compare Dates
+            if(new Date(cached.date) >= new Date(newsArr[0].date)){
+                // Content has changed.
+                newCached = true
+            }
+        } else {
+            // Never seen before.
+            newCached = true
+        }
         ConfigManager.setNewsCache({
-            date: null,
-            content: null,
+            date: newsArr[0].date,
+            content: newHash,
             dismissed: false
         })
         ConfigManager.save()
-
-        await $('#newsErrorLoading').fadeOut(250).promise()
-        await $('#newsErrorNone').fadeIn(250).promise()
-    } else {
-        // Success
-        setNewsLoading(false)
-
-        const lN = newsArr[0]
-        const cached = ConfigManager.getNewsCache()
-        let newHash = await digestMessage(lN.content)
-        let newDate = new Date(lN.date)
-        let isNew = false
-
-        if(cached.date != null && cached.content != null){
-
-            if(new Date(cached.date) >= newDate){
-
-                // Compare Content
-                if(cached.content !== newHash){
-                    isNew = true
-                    showNewsAlert()
-                } else {
-                    if(!cached.dismissed){
-                        isNew = true
-                        showNewsAlert()
-                    }
-                }
-
-            } else {
-                isNew = true
-                showNewsAlert()
-            }
-
-        } else {
-            isNew = true
-            showNewsAlert()
-        }
-
-        if(isNew){
-            ConfigManager.setNewsCache({
-                date: newDate.getTime(),
-                content: newHash,
-                dismissed: false
-            })
-            ConfigManager.save()
-        }
-
-        const switchHandler = (forward) => {
-            let cArt = parseInt(newsContent.getAttribute('article'))
-            let nxtArt = forward ? (cArt >= newsArr.length-1 ? 0 : cArt + 1) : (cArt <= 0 ? newsArr.length-1 : cArt - 1)
-    
-            displayArticle(newsArr[nxtArt], nxtArt+1)
-        }
-
-        document.getElementById('newsNavigateRight').onclick = () => { switchHandler(true) }
-        document.getElementById('newsNavigateLeft').onclick = () => { switchHandler(false) }
-        await $('#newsErrorContainer').fadeOut(250).promise()
-        displayArticle(newsArr[0], 1)
-        await $('#newsContent').fadeIn(250).promise()
     }
 
-
+    // Afficher les deux premières actualités directement dans l'interface principale
+    if (newsArr.length >= 1) {
+        displayNewsCards(newsArr.slice(0, Math.min(2, newsArr.length)))
+    }
 }
 
-/**
- * Add keyboard controls to the news UI. Left and right arrows toggle
- * between articles. If you are on the landing page, the up arrow will
- * open the news UI.
- */
-document.addEventListener('keydown', (e) => {
-    if(newsActive){
-        if(e.key === 'ArrowRight' || e.key === 'ArrowLeft'){
-            document.getElementById(e.key === 'ArrowRight' ? 'newsNavigateRight' : 'newsNavigateLeft').click()
-        }
-        // Interferes with scrolling an article using the down arrow.
-        // Not sure of a straight forward solution at this point.
-        // if(e.key === 'ArrowDown'){
-        //     document.getElementById('newsButton').click()
-        // }
-    } else {
-        if(getCurrentView() === VIEWS.landing){
-            if(e.key === 'ArrowUp'){
-                document.getElementById('newsButton').click()
-            }
-        }
-    }
-})
+// Les actualités sont maintenant directement affichées dans l'interface principale
 
 /**
- * Display a news article on the UI.
+ * Fonction d'origine pour l'affichage des actualités - remplacée par displayNewsCards.
+ * Cette fonction n'est plus utilisée mais est conservée par référence.
  * 
  * @param {Object} articleObject The article meta object.
  * @param {number} index The article index.
  */
+/*
 function displayArticle(articleObject, index){
     newsArticleTitle.innerHTML = articleObject.title
     newsArticleTitle.href = articleObject.link
@@ -927,6 +832,84 @@ function displayArticle(articleObject, index){
     })
     newsNavigationStatus.innerHTML = Lang.query('ejs.landing.newsNavigationStatus', {currentPage: index, totalPages: newsArr.length})
     newsContent.setAttribute('article', index-1)
+}
+*/
+
+/**
+ * Affiche les actualités sous forme de cartes directement dans l'interface principale.
+ * 
+ * @param {Array} articles Tableau d'objets d'actualités à afficher
+ */
+function displayNewsCards(articles) {
+    console.log('displayNewsCards appelé avec', articles.length, 'articles')
+    
+    // Vider le conteneur des cartes
+    const newsCardsDisplay = document.getElementById('newsCardsDisplay')
+    if (!newsCardsDisplay) {
+        console.error('newsCardsDisplay n\'existe pas dans le DOM!')
+        return // Protection si l'élément n'existe pas
+    }
+    console.log('newsCardsDisplay trouvé:', newsCardsDisplay)
+    
+    newsCardsDisplay.innerHTML = ''
+    
+    // Style pour le conteneur
+    newsCardsDisplay.style.display = 'flex'
+    newsCardsDisplay.style.flexDirection = 'row' // Horizontal au lieu de vertical
+    newsCardsDisplay.style.gap = '10px'
+    newsCardsDisplay.style.position = 'absolute'
+    newsCardsDisplay.style.right = '20px' // Position à droite
+    newsCardsDisplay.style.bottom = '80px' // Position plus bas
+    newsCardsDisplay.style.overflow = 'hidden'
+    
+    // Afficher seulement les deux premiers articles s'il y en a plus
+    const displayArticles = articles.slice(0, Math.min(2, articles.length))
+    
+    // Créer une carte pour chaque article
+    displayArticles.forEach((article, index) => {
+        // Utiliser l'image de la balise enclosure ou l'image par défaut
+        let imageUrl = article.thumbnail || 'assets/images/news_default.svg'
+        
+        // Créer la carte
+        const card = document.createElement('div')
+        card.className = 'newsCard'
+        card.style.width = '250px' // Réduire la largeur
+        card.style.height = '150px' // Réduire la hauteur
+        card.style.marginBottom = '8px'
+        card.style.border = '1px solid rgba(255, 255, 255, 0.2)'
+        card.style.borderRadius = '8px' // Bords moins arrondis pour correspondre à la taille réduite
+        card.style.overflow = 'hidden'
+        card.style.cursor = 'pointer'
+        card.style.transition = 'all 0.2s'
+        card.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.16), 0 2px 4px rgba(0, 0, 0, 0.23)' // Ombre plus légère
+        card.style.backgroundColor = 'rgba(0, 0, 0, 0.5)'
+        
+        card.innerHTML = `
+            <div class="newsCardImage" style="background-image: url('${imageUrl}'); background-size: cover; background-position: center; height: 80px;"></div>
+            <div class="newsCardOverlay" style="padding: 6px;">
+                <h3 class="newsCardTitle" style="margin: 0 0 3px 0; font-size: 12px; color: #ffffff; font-weight: 500; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">${article.title}</h3>
+                <div class="newsCardMeta" style="font-size: 10px; color: rgba(255, 255, 255, 0.8);">
+                    <span class="newsCardDate">${article.date}</span>
+                </div>
+            </div>
+        `
+        
+        // Effet de hover
+        card.addEventListener('mouseenter', () => {
+            card.style.transform = 'scale(1.02)'
+        })
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'scale(1)'
+        })
+        
+        // Ajouter l'événement de clic pour ouvrir l'article
+        card.addEventListener('click', () => {
+            require('electron').shell.openExternal(article.link)
+        })
+        
+        // Ajouter la carte au conteneur
+        newsCardsDisplay.appendChild(card)
+    })
 }
 
 /**
@@ -951,14 +934,17 @@ async function loadNews(){
                     const el = $(items[i])
 
                     // Resolve date.
-                    const date = new Date(el.find('pubDate').text()).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'})
+                    const date = new Date(el.find('pubDate').text()).toLocaleDateString('fr-FR', {day: 'numeric', month: 'long', year: 'numeric'})
 
                     // Resolve comments.
-                    let comments = el.find('slash\\:comments').text() || '0'
+                    let comments = el.find('slash\:comments').text() || '0'
                     comments = comments + ' Comment' + (comments === '1' ? '' : 's')
 
+                    // Extraire l'image depuis la balise enclosure (thumbnail)
+                    let thumbnail = el.find('enclosure').attr('url') || null
+
                     // Fix relative links in content.
-                    let content = el.find('content\\:encoded').text()
+                    let content = el.find('content\:encoded').text()
                     let regex = /src="(?!http:\/\/|https:\/\/)(.+?)"/g
                     let matches
                     while((matches = regex.exec(content))){
@@ -967,7 +953,7 @@ async function loadNews(){
 
                     let link   = el.find('link').text()
                     let title  = el.find('title').text()
-                    let author = el.find('dc\\:creator').text()
+                    let author = el.find('dc\:creator').text() || 'Rustolia'
 
                     // Generate article.
                     articles.push(
@@ -978,7 +964,8 @@ async function loadNews(){
                             author,
                             content,
                             comments,
-                            commentsLink: link + '#comments'
+                            commentsLink: link + '#comments',
+                            thumbnail
                         }
                     )
                 }

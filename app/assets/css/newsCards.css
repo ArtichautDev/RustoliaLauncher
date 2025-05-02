@@ -1,0 +1,121 @@
+/* Style pour l'affichage des cartes d'actualités */
+#newsCardsContainer {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: rgba(0, 0, 0, 0.75);
+}
+
+#newsCardsWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.newsCard {
+    position: relative;
+    width: 500px;
+    height: 300px;
+    background-color: rgba(17, 17, 17, 0.8);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.newsCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+}
+
+.newsCardImage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.55;
+    transition: opacity 0.3s ease;
+}
+
+.newsCard:hover .newsCardImage {
+    opacity: 0.65;
+}
+
+.newsCardOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 30%, rgba(0, 0, 0, 0.4) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.newsCardCategory {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: #e74c3c;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-transform: uppercase;
+}
+
+.newsCardTitle {
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    line-height: 1.3;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+.newsCardMeta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.newsCardDate {
+    color: #cccccc;
+    font-size: 14px;
+}
+
+@media (max-width: 1100px) {
+    .newsCard {
+        width: 450px;
+        height: 270px;
+    }
+}
+
+@media (max-width: 950px) {
+    #newsCardsWrapper {
+        flex-direction: column;
+    }
+    
+    .newsCard {
+        width: 80%;
+        height: 250px;
+    }
+}

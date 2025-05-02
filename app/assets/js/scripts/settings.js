@@ -679,59 +679,23 @@ let CACHE_DROPIN_MODS
 /**
  * Resolve any located drop-in mods for this server and
  * populate the results onto the UI.
+ * DÉSACTIVÉ: Fonctionnalité drop-in mods désactivée
  */
 async function resolveDropinModsForUI(){
     const serv = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
     CACHE_SETTINGS_MODS_DIR = path.join(ConfigManager.getInstanceDirectory(), serv.rawServer.id, 'mods')
-    CACHE_DROPIN_MODS = DropinModUtil.scanForDropinMods(CACHE_SETTINGS_MODS_DIR, serv.rawServer.minecraftVersion)
-
-    let dropinMods = ''
-
-    for(dropin of CACHE_DROPIN_MODS){
-        dropinMods += `<div id="${dropin.fullName}" class="settingsBaseMod settingsDropinMod" ${!dropin.disabled ? 'enabled' : ''}>
-                    <div class="settingsModContent">
-                        <div class="settingsModMainWrapper">
-                            <div class="settingsModStatus"></div>
-                            <div class="settingsModDetails">
-                                <span class="settingsModName">${dropin.name}</span>
-                                <div class="settingsDropinRemoveWrapper">
-                                    <button class="settingsDropinRemoveButton" remmod="${dropin.fullName}">${Lang.queryJS('settings.dropinMods.removeButton')}</button>
-                                </div>
-                            </div>
-                        </div>
-                        <label class="toggleSwitch">
-                            <input type="checkbox" formod="${dropin.fullName}" dropin ${!dropin.disabled ? 'checked' : ''}>
-                            <span class="toggleSwitchSlider"></span>
-                        </label>
-                    </div>
-                </div>`
-    }
-
-    document.getElementById('settingsDropinModsContent').innerHTML = dropinMods
+    CACHE_DROPIN_MODS = [] // Vide pour désactiver la fonctionnalité
+    
+    // Ne pas remplir le contenu car la section est masquée
+    document.getElementById('settingsDropinModsContent').innerHTML = ''
 }
 
 /**
  * Bind the remove button for each loaded drop-in mod.
  */
 function bindDropinModsRemoveButton(){
-    const sEls = settingsModsContainer.querySelectorAll('[remmod]')
-    Array.from(sEls).map((v, index, arr) => {
-        v.onclick = async () => {
-            const fullName = v.getAttribute('remmod')
-            const res = await DropinModUtil.deleteDropinMod(CACHE_SETTINGS_MODS_DIR, fullName)
-            if(res){
-                document.getElementById(fullName).remove()
-            } else {
-                setOverlayContent(
-                    Lang.queryJS('settings.dropinMods.deleteFailedTitle', { fullName }),
-                    Lang.queryJS('settings.dropinMods.deleteFailedMessage'),
-                    Lang.queryJS('settings.dropinMods.okButton')
-                )
-                setOverlayHandler(null)
-                toggleOverlay(true)
-            }
-        }
-    })
+    // Fonction désactivée mais conservée pour compatibilité
+    return
 }
 
 /**
@@ -739,56 +703,30 @@ function bindDropinModsRemoveButton(){
  * server configuration.
  */
 function bindDropinModFileSystemButton(){
+    // Fonction désactivée mais conservée pour compatibilité
     const fsBtn = document.getElementById('settingsDropinFileSystemButton')
-    fsBtn.onclick = () => {
-        DropinModUtil.validateDir(CACHE_SETTINGS_MODS_DIR)
-        shell.openPath(CACHE_SETTINGS_MODS_DIR)
-    }
-    fsBtn.ondragenter = e => {
-        e.dataTransfer.dropEffect = 'move'
-        fsBtn.setAttribute('drag', '')
-        e.preventDefault()
-    }
-    fsBtn.ondragover = e => {
-        e.preventDefault()
-    }
-    fsBtn.ondragleave = e => {
-        fsBtn.removeAttribute('drag')
+    if(fsBtn) {
+        fsBtn.onclick = () => {}
     }
 
-    fsBtn.ondrop = async e => {
-        fsBtn.removeAttribute('drag')
-        e.preventDefault()
-
-        DropinModUtil.addDropinMods(e.dataTransfer.files, CACHE_SETTINGS_MODS_DIR)
-        await reloadDropinMods()
+    // Désactiver aussi le drag & drop
+    const settingsModsContainer = document.getElementById('settingsModsContainer')
+    if(settingsModsContainer) {
+        settingsModsContainer.ondragenter = e => { e.preventDefault() }
+        settingsModsContainer.ondragleave = e => { e.preventDefault() }
+        settingsModsContainer.ondragover = e => { e.preventDefault() }
+        settingsModsContainer.ondrop = e => { e.preventDefault() }
     }
 }
 
 /**
  * Save drop-in mod states. Enabling and disabling is just a matter
  * of adding/removing the .disabled extension.
+ * DÉSACTIVÉ: Fonctionnalité drop-in mods désactivée
  */
 function saveDropinModConfiguration(){
-    for(dropin of CACHE_DROPIN_MODS){
-        const dropinUI = document.getElementById(dropin.fullName)
-        if(dropinUI != null){
-            const dropinUIEnabled = dropinUI.hasAttribute('enabled')
-            if(DropinModUtil.isDropinModEnabled(dropin.fullName) != dropinUIEnabled){
-                DropinModUtil.toggleDropinMod(CACHE_SETTINGS_MODS_DIR, dropin.fullName, dropinUIEnabled).catch(err => {
-                    if(!isOverlayVisible()){
-                        setOverlayContent(
-                            Lang.queryJS('settings.dropinMods.failedToggleTitle'),
-                            err.message,
-                            Lang.queryJS('settings.dropinMods.okButton')
-                        )
-                        setOverlayHandler(null)
-                        toggleOverlay(true)
-                    }
-                })
-            }
-        }
-    }
+    // Fonction désactivée mais conservée pour compatibilité
+    return
 }
 
 // Refresh the drop-in mods when F5 is pressed.
@@ -818,14 +756,15 @@ let CACHE_SELECTED_SHADERPACK
 
 /**
  * Load shaderpack information.
+ * DÉSACTIVÉ: Fonctionnalité shaderpacks désactivée
  */
 async function resolveShaderpacksForUI(){
     const serv = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
     CACHE_SETTINGS_INSTANCE_DIR = path.join(ConfigManager.getInstanceDirectory(), serv.rawServer.id)
-    CACHE_SHADERPACKS = DropinModUtil.scanForShaderpacks(CACHE_SETTINGS_INSTANCE_DIR)
-    CACHE_SELECTED_SHADERPACK = DropinModUtil.getEnabledShaderpack(CACHE_SETTINGS_INSTANCE_DIR)
-
-    setShadersOptions(CACHE_SHADERPACKS, CACHE_SELECTED_SHADERPACK)
+    CACHE_SHADERPACKS = []
+    CACHE_SELECTED_SHADERPACK = 'OFF'
+    
+    // Ne rien faire car la section shaderpack est masquée
 }
 
 function setShadersOptions(arr, selected){
@@ -851,42 +790,24 @@ function setShadersOptions(arr, selected){
     }
 }
 
+/**
+ * Enregistre les paramètres de shaderpack.
+ * DÉSACTIVÉ: Fonctionnalité shaderpacks désactivée
+ */
 function saveShaderpackSettings(){
-    let sel = 'OFF'
-    for(let opt of document.getElementById('settingsShadersOptions').childNodes){
-        if(opt.hasAttribute('selected')){
-            sel = opt.getAttribute('value')
-        }
-    }
-    DropinModUtil.setEnabledShaderpack(CACHE_SETTINGS_INSTANCE_DIR, sel)
+    // Fonction désactivée mais conservée pour compatibilité
+    return
 }
 
 function bindShaderpackButton() {
+    // Fonction désactivée mais conservée pour compatibilité
     const spBtn = document.getElementById('settingsShaderpackButton')
-    spBtn.onclick = () => {
-        const p = path.join(CACHE_SETTINGS_INSTANCE_DIR, 'shaderpacks')
-        DropinModUtil.validateDir(p)
-        shell.openPath(p)
-    }
-    spBtn.ondragenter = e => {
-        e.dataTransfer.dropEffect = 'move'
-        spBtn.setAttribute('drag', '')
-        e.preventDefault()
-    }
-    spBtn.ondragover = e => {
-        e.preventDefault()
-    }
-    spBtn.ondragleave = e => {
-        spBtn.removeAttribute('drag')
-    }
-
-    spBtn.ondrop = async e => {
-        spBtn.removeAttribute('drag')
-        e.preventDefault()
-
-        DropinModUtil.addShaderpacks(e.dataTransfer.files, CACHE_SETTINGS_INSTANCE_DIR)
-        saveShaderpackSettings()
-        await resolveShaderpacksForUI()
+    if(spBtn) {
+        spBtn.onclick = () => {}
+        spBtn.ondragenter = e => { e.preventDefault() }
+        spBtn.ondragover = e => { e.preventDefault() }
+        spBtn.ondragleave = e => {}
+        spBtn.ondrop = e => { e.preventDefault() }
     }
 }
 

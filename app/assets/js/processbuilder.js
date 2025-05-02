@@ -329,74 +329,15 @@ class ProcessBuilder {
     }
 
     _processAutoConnectArg(args){
-        if(ConfigManager.getAutoConnect() && this.server.rawServer.autoconnect){
+        if(this.server.rawServer.autoconnect){
             try {
                 const serverHost = this.server.rawServer.address.split(':')[0];
                 const serverPort = this.server.rawServer.address.split(':')[1] || '25565';
                 
-                // Generate Azuriom authentication token if user is authenticated
-                let tokenPrefixedAddress = null;
-                if(this.authUser) {
-                    // Generate the token in the format: userId-first55charactersOfAccessToken
-                    const userId = this.authUser.azuriomUserId;
-                    const accessToken = this.authUser.accessToken;
-                    
-                    if(userId && accessToken) {
-                        // Create token from userId and first 55 characters of accessToken
-                        const tokenPrefix = `${userId}-${accessToken.substring(0, 55)}`;
-                        logger.info(`Generated Azuriom authentication token for user ${this.authUser.displayName} (ID: ${userId})`);
-                        
-                        // Add JVM arg with the custom token
-                        args.push('-Drustolia.auth.token=' + tokenPrefix);
-                        logger.info('Added JVM arg: -Drustolia.auth.token=' + tokenPrefix);
-                    } else {
-                        logger.warn('Cannot generate Azuriom token: missing userId or accessToken');
-                        logger.debug('Auth user data:', JSON.stringify(this.authUser));
-                    }
-                }
                 
-                // Use the quickplay functionality for Minecraft 1.20+
-                if(mcVersionAtLeast('1.20', this.server.rawServer.minecraftVersion)) {
-                    args.push('--quickPlayMultiplayer');
-                        // Format: serverip:port (without token)
-                        args.push(`${serverHost}:${serverPort}`);
-                    
-                } else {
-                    // For older versions, use --server argument
-                    args.push('--server');
-                    
-                    // Use token-prefixed address if available
-                    if(tokenPrefixedAddress) {
-                        args.push(tokenPrefixedAddress);
-                    } else {
-                        args.push(serverHost);
-                    }
-                    
-                    args.push('--port');
-                    args.push(serverPort);
-                }
                 
             } catch(err) {
                 logger.error('Error in autoconnect process:', err);
-                // Fallback to regular connection without token
-                try {
-                    const serverHost = this.server.rawServer.address.split(':')[0];
-                    const serverPort = this.server.rawServer.address.split(':')[1] || '25565';
-                    
-                    if(mcVersionAtLeast('1.20', this.server.rawServer.minecraftVersion)) {
-                        args.push('--quickPlayMultiplayer');
-                        args.push(`${serverHost}:${serverPort}`);
-                    } else {
-                        args.push('--server');
-                        args.push(serverHost);
-                        args.push('--port');
-                        args.push(serverPort);
-                    }
-                    
-                    logger.warn('Fallback: Using regular server connection without token');
-                } catch(fallbackErr) {
-                    logger.error('Critical error in autoconnect fallback:', fallbackErr);
-                }
             }
         }
     }
@@ -453,6 +394,27 @@ class ProcessBuilder {
 
         // Forge Arguments
         args = args.concat(this._resolveForgeArgs())
+
+        // Generate Azuriom authentication token if user is authenticated
+        let tokenPrefixedAddress = null;
+        if(this.authUser) {
+            // Generate the token in the format: userId-first55charactersOfAccessToken
+            const userId = this.authUser.azuriomUserId;
+            const accessToken = this.authUser.accessToken;
+            
+            if(userId && accessToken) {
+                // Create token from userId and first 55 characters of accessToken
+                const tokenPrefix = `${userId}-${accessToken.substring(0, 55)}`;
+                logger.info(`Generated Azuriom authentication token for user ${this.authUser.displayName} (ID: ${userId})`);
+                
+                // Add JVM arg with the custom token
+                args.push('-Drustolia.auth.token=' + tokenPrefix);
+                logger.info('Added JVM arg: -Drustolia.auth.token=' + tokenPrefix);
+            } else {
+                logger.warn('Cannot generate Azuriom token: missing userId or accessToken');
+                logger.debug('Auth user data:', JSON.stringify(this.authUser));
+            }
+        }
 
         return args
     }
@@ -618,6 +580,25 @@ class ProcessBuilder {
         // Autoconnect
         this._processAutoConnectArg(args)
         
+        // Generate Azuriom authentication token if user is authenticated
+        if(this.authUser) {
+            // Generate the token in the format: userId-first55charactersOfAccessToken
+            const userId = this.authUser.azuriomUserId;
+            const accessToken = this.authUser.accessToken;
+            
+            if(userId && accessToken) {
+                // Create token from userId and first 55 characters of accessToken
+                const tokenPrefix = `${userId}-${accessToken.substring(0, 55)}`;
+                logger.info(`Generated Azuriom authentication token for user ${this.authUser.displayName} (ID: ${userId})`);
+                
+                // Add JVM arg with the custom token
+                args.push('-Drustolia.auth.token=' + tokenPrefix);
+                logger.info('Added JVM arg: -Drustolia.auth.token=' + tokenPrefix);
+            } else {
+                logger.warn('Cannot generate Azuriom token: missing userId or accessToken');
+                logger.debug('Auth user data:', JSON.stringify(this.authUser));
+            }
+        }
 
         // Forge Specific Arguments
         args = args.concat(this.modManifest.arguments.game)

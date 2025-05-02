@@ -222,7 +222,7 @@ body, button {
     align-items: center;
     height: 100%;
     width: 100%;
-    background: rgba(0, 0, 0, 0.50);
+    background: transparent;
 }
 
 #welcomeContent {
@@ -2448,9 +2448,12 @@ input:checked + .toggleSwitchSlider:before {
 /* Main content container. */
 #landingContainer {
     height: 100%;
+    width: 100%;
     position: relative;
     transition: background 2s ease;
     overflow-y: hidden;
+    padding: 0;
+    margin: 0;
 }
 
 /* Upper content container. */
@@ -2460,6 +2463,8 @@ input:checked + .toggleSwitchSlider:before {
     top: 0px;
     height: 77%;
     display: flex;
+    padding: 0;
+    margin: 0;
 }
 #landingContainer > #upper > #left {
     display: inline-flex;
@@ -2469,20 +2474,24 @@ input:checked + .toggleSwitchSlider:before {
 }
 #landingContainer > #upper > #content {
     display: inline-flex;
-    width: 70%;
+    width: 85%;
     height: 100%;
 }
 #landingContainer > #upper > #right {
     display: inline-flex;
     width: 15%;
     height: 100%;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding: 0;
+    margin: 0;
 }
 
 /* Lower content container. */
 #landingContainer > #lower {
     height: 23%;
     display: flex;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+    background: transparent;
 }
 #landingContainer > #lower > #left {
     position: relative;
@@ -2855,21 +2864,21 @@ input:checked + .toggleSwitchSlider:before {
 
 /* Logo image. */
 #image_seal {
-    height: 70px;
+    height: 40px;
     width: auto;
     position: relative;
-    border: 2px solid white;
+    border: none;
     box-sizing: border-box;
-    border-radius: 50%;
+    border-radius: 0;
 }
 
 /* Logo container styles. */
 #image_seal_container {
     position: relative;
-    height: 70px;
-    width: 70px;
-    border-radius: 50%;
-    margin-top: 50px;
+    height: 40px;
+    width: auto;
+    border-radius: 0;
+    margin-top: 0;
 }
 
 /* Logo container styles w/ update. */
@@ -2970,14 +2979,14 @@ input:checked + .toggleSwitchSlider:before {
 
 /* User profile avatar container. */
 #avatarContainer {
-    border-radius: 50%;
+    border-radius: 0;
     border: 2px solid #cad7e1;
     box-sizing: border-box;
     background: rgba(1, 2, 1, 0.5);
-    height: 70px;
-    width: 70px;
+    height: 35px;
+    width: 35px;
     box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
-    overflow: hidden;
+    overflow: visible;
     position: relative;
     background-position: center;
     background-repeat: no-repeat;
@@ -2992,16 +3001,18 @@ input:checked + .toggleSwitchSlider:before {
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: 0.25s ease;
-    font-weight: bold;
-    letter-spacing: 2px;
-    background-color: rgba(0, 0, 0, 0.35);
-    -webkit-user-select: none;
-    border: none;
-    cursor: pointer;
+    top: 0px;
+    left: 0px;
     width: 100%;
     height: 100%;
-    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    border: none;
+    border-radius: 0;
+    text-align: center;
+    color: white;
+    font-size: 9px;
+    transition: 0.25s ease-out;
 }
 #avatarOverlay:hover,
 #avatarOverlay:focus {
@@ -3510,7 +3521,7 @@ input:checked + .toggleSwitchSlider:before {
     justify-content: center;
     width: 100%;
     height: calc(100% - 22px);
-    background: rgba(0, 0, 0, 0.50);
+    background: transparent;
 }
 
 /* Main overlay content. */
