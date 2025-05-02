@@ -1192,20 +1192,22 @@ transform: rotate(720deg);
     text-align: left;
     margin: 5px 0px;
     padding: 0px 20px;
-    color: grey;
+    color: white;
     cursor: pointer;
     outline: none;
     transition: 0.25s ease;
+    position: relative;
 }
 .settingsNavItem:hover,
 .settingsNavItem:focus {
-    color: #c1c1c1;
-    text-shadow: 0px 0px 20px #c1c1c1;
+    text-shadow: 0px 0px 8px rgba(255, 255, 255, 0.7);
+    transform: scale(1.05) translateX(5px);
 }
 .settingsNavItem[selected] {
     cursor: default;
-    color: white;
-    text-shadow: none;
+    font-weight: bold;
+    text-shadow: 0px 0px 10px rgba(255, 255, 255, 0.5);
+    position: relative;
 }
 
 /* Div to add some space between nav items. */
