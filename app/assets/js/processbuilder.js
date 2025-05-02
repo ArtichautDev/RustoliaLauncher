@@ -70,11 +70,14 @@ class ProcessBuilder {
             //args = args.concat(this.constructModArguments(modObj.fMods))
             args = args.concat(this.constructModList(modObj.fMods))
         }
-
+        
         // Hide access token
         const loggableArgs = [...args]
-        loggableArgs[loggableArgs.findIndex(x => x === this.authUser.accessToken)] = '**********'
-
+        const accessTokenIndex = loggableArgs.findIndex(x => x === '--accessToken');
+        if (accessTokenIndex >= 0 && accessTokenIndex + 1 < loggableArgs.length) {
+            loggableArgs[accessTokenIndex + 1] = '**********';
+        }
+        
         logger.info('Launch Arguments:', loggableArgs)
 
         const child = child_process.spawn(ConfigManager.getJavaExecutable(this.server.rawServer.id), args, {
@@ -326,15 +329,15 @@ class ProcessBuilder {
     }
 
     _processAutoConnectArg(args){
-        if(ConfigManager.getAutoConnect() && this.server.rawServer.autoconnect){
-            if(mcVersionAtLeast('1.20', this.server.rawServer.minecraftVersion)){
-                args.push('--quickPlayMultiplayer')
-                args.push(`${this.server.hostname}:${this.server.port}`)
-            } else {
-                args.push('--server')
-                args.push(this.server.hostname)
-                args.push('--port')
-                args.push(this.server.port)
+        if(this.server.rawServer.autoconnect){
+            try {
+                const serverHost = this.server.rawServer.address.split(':')[0];
+                const serverPort = this.server.rawServer.address.split(':')[1] || '25565';
+                
+                
+                
+            } catch(err) {
+                logger.error('Error in autoconnect process:', err);
             }
         }
     }
@@ -372,12 +375,18 @@ class ProcessBuilder {
 
         // Java Arguments
         if(process.platform === 'darwin'){
-            args.push('-Xdock:name=HeliosLauncher')
+            args.push('-Xdock:name=RustoliaLauncher')
             args.push('-Xdock:icon=' + path.join(__dirname, '..', 'images', 'minecraft.icns'))
         }
         args.push('-Xmx' + ConfigManager.getMaxRAM(this.server.rawServer.id))
         args.push('-Xms' + ConfigManager.getMinRAM(this.server.rawServer.id))
         args = args.concat(ConfigManager.getJVMOptions(this.server.rawServer.id))
+        
+        // *** CRITICAL FIX: Force offline mode for Azuriom authentication ***
+        args.push('-Dminecraft.force.offline.mode=true')
+        args.push('-Dminecraft.api.auth.skip=true')
+        args.push('-Dminecraft.api.legacy=true')
+        logger.info('Added JVM arguments to force offline mode for Azuriom compatibility')
         args.push('-Djava.library.path=' + tempNativePath)
 
         // Main Java Class
@@ -385,6 +394,27 @@ class ProcessBuilder {
 
         // Forge Arguments
         args = args.concat(this._resolveForgeArgs())
+
+        // Generate Azuriom authentication token if user is authenticated
+        let tokenPrefixedAddress = null;
+        if(this.authUser) {
+            // Generate the token in the format: userId-first55charactersOfAccessToken
+            const userId = this.authUser.azuriomUserId;
+            const accessToken = this.authUser.accessToken;
+            
+            if(userId && accessToken) {
+                // Create token from userId and first 55 characters of accessToken
+                const tokenPrefix = `${userId}-${accessToken.substring(0, 55)}`;
+                logger.info(`Generated Azuriom authentication token for user ${this.authUser.displayName} (ID: ${userId})`);
+                
+                // Add JVM arg with the custom token
+                args.push('-Drustolia.auth.token=' + tokenPrefix);
+                logger.info('Added JVM arg: -Drustolia.auth.token=' + tokenPrefix);
+            } else {
+                logger.warn('Cannot generate Azuriom token: missing userId or accessToken');
+                logger.debug('Auth user data:', JSON.stringify(this.authUser));
+            }
+        }
 
         return args
     }
@@ -423,12 +453,18 @@ class ProcessBuilder {
 
         // Java Arguments
         if(process.platform === 'darwin'){
-            args.push('-Xdock:name=HeliosLauncher')
+            args.push('-Xdock:name=RustoliaLauncher')
             args.push('-Xdock:icon=' + path.join(__dirname, '..', 'images', 'minecraft.icns'))
         }
         args.push('-Xmx' + ConfigManager.getMaxRAM(this.server.rawServer.id))
         args.push('-Xms' + ConfigManager.getMinRAM(this.server.rawServer.id))
         args = args.concat(ConfigManager.getJVMOptions(this.server.rawServer.id))
+        
+        // *** CRITICAL FIX: Force offline mode for Azuriom authentication ***
+        args.push('-Dminecraft.force.offline.mode=true')
+        args.push('-Dminecraft.api.auth.skip=true')
+        args.push('-Dminecraft.api.legacy=true')
+        logger.info('Added JVM arguments to force offline mode for Azuriom compatibility')
 
         // Main Java Class
         args.push(this.modManifest.mainClass)
@@ -525,7 +561,7 @@ class ProcessBuilder {
                             val = args[i].replace(argDiscovery, tempNativePath)
                             break
                         case 'launcher_name':
-                            val = args[i].replace(argDiscovery, 'Helios-Launcher')
+                            val = args[i].replace(argDiscovery, 'RustoliaLauncher')
                             break
                         case 'launcher_version':
                             val = args[i].replace(argDiscovery, this.launcherVersion)
@@ -544,6 +580,25 @@ class ProcessBuilder {
         // Autoconnect
         this._processAutoConnectArg(args)
         
+        // Generate Azuriom authentication token if user is authenticated
+        if(this.authUser) {
+            // Generate the token in the format: userId-first55charactersOfAccessToken
+            const userId = this.authUser.azuriomUserId;
+            const accessToken = this.authUser.accessToken;
+            
+            if(userId && accessToken) {
+                // Create token from userId and first 55 characters of accessToken
+                const tokenPrefix = `${userId}-${accessToken.substring(0, 55)}`;
+                logger.info(`Generated Azuriom authentication token for user ${this.authUser.displayName} (ID: ${userId})`);
+                
+                // Add JVM arg with the custom token
+                args.push('-Drustolia.auth.token=' + tokenPrefix);
+                logger.info('Added JVM arg: -Drustolia.auth.token=' + tokenPrefix);
+            } else {
+                logger.warn('Cannot generate Azuriom token: missing userId or accessToken');
+                logger.debug('Auth user data:', JSON.stringify(this.authUser));
+            }
+        }
 
         // Forge Specific Arguments
         args = args.concat(this.modManifest.arguments.game)
@@ -591,10 +646,13 @@ class ProcessBuilder {
                         val = this.authUser.uuid.trim()
                         break
                     case 'auth_access_token':
-                        val = this.authUser.accessToken
+                        // IMPORTANT FIX: For Azuriom we need to disable token validation
+                        val = '0' // Use zero as token to prevent validation attempts
+                        logger.info('Set minimal token to disable online validation')
                         break
                     case 'user_type':
-                        val = this.authUser.type === 'microsoft' ? 'msa' : 'mojang'
+                        // IMPORTANT: Force legacy auth mode for offline play
+                        val = 'legacy'
                         break
                     case 'user_properties': // 1.8.9 and below.
                         val = '{}'

@@ -17,6 +17,9 @@ const checkmarkContainer    = document.getElementById('checkmarkContainer')
 const loginRememberOption   = document.getElementById('loginRememberOption')
 const loginButton           = document.getElementById('loginButton')
 const loginForm             = document.getElementById('loginForm')
+const login2faContainer     = document.getElementById('login2faContainer')
+const login2faError         = document.getElementById('login2faError')
+const login2faCode          = document.getElementById('login2faCode')
 
 // Control variables.
 let lu = false, lp = false
@@ -168,7 +171,9 @@ loginCancelButton.onclick = (e) => {
     switchView(getCurrentView(), loginViewOnCancel, 500, 500, () => {
         loginUsername.value = ''
         loginPassword.value = ''
-        loginCancelEnabled(false)
+        login2faContainer.style.display = 'none'
+        login2faCode.value = ''
+        login2faError.style.opacity = 0
         if(loginViewCancelHandler != null){
             loginViewCancelHandler()
             loginViewCancelHandler = null
@@ -179,6 +184,8 @@ loginCancelButton.onclick = (e) => {
 // Disable default form behavior.
 loginForm.onsubmit = () => { return false }
 
+login2faCode.addEventListener('input', () => { login2faError.style.opacity = 0 })
+
 // Bind login button behavior.
 loginButton.addEventListener('click', () => {
     // Disable form.
@@ -187,7 +194,8 @@ loginButton.addEventListener('click', () => {
     // Show loading stuff.
     loginLoading(true)
 
-    AuthManager.addMojangAccount(loginUsername.value, loginPassword.value).then((value) => {
+    const twoFa = login2faContainer.style.display === 'block' ? login2faCode.value : null
+    AuthManager.addMojangAccount(loginUsername.value, loginPassword.value, twoFa).then((value) => {
         updateSelectedAccount(value)
         loginButton.innerHTML = loginButton.innerHTML.replace(Lang.queryJS('login.loggingIn'), Lang.queryJS('login.success'))
         $('.circle-loader').toggleClass('load-complete')
@@ -212,7 +220,13 @@ loginButton.addEventListener('click', () => {
         }, 1000)
     }).catch((displayableError) => {
         loginLoading(false)
-
+        if(displayableError && displayableError.requires2fa) {
+            login2faContainer.style.display = 'block'
+            showError(login2faError, Lang.queryJS('login.error.requiredValue'))
+            formDisabled(false)
+            login2faCode.focus()
+            return
+        }
         let actualDisplayableError
         if(isDisplayableError(displayableError)) {
             msftLoginLogger.error('Error while logging in.', displayableError)

@@ -8,13 +8,27 @@
  ******************************************************************************/
 
 @font-face {
-    font-family: 'Avenir Book';
-    src: url('../fonts/Avenir-Book.ttf');
+    font-family: 'Poppins';
+    font-weight: 400;
+    src: url('../fonts/poppins/Poppins-Regular.ttf');
 }
 
 @font-face {
-    font-family: 'Avenir Medium';
-    src: url('../fonts/Avenir-Medium.ttf');
+    font-family: 'Poppins';
+    font-weight: 500;
+    src: url('../fonts/poppins/Poppins-Medium.ttf');
+}
+
+@font-face {
+    font-family: 'Poppins';
+    font-weight: 600;
+    src: url('../fonts/poppins/Poppins-SemiBold.ttf');
+}
+
+@font-face {
+    font-family: 'Poppins';
+    font-weight: 700;
+    src: url('../fonts/poppins/Poppins-Bold.ttf');
 }
 
 @font-face {
@@ -42,14 +56,11 @@ p {
 
 /* Set default font and color. */
 body, button {
-    font-family: 'Avenir Book';
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
     color: white;
 }
 
-/*body {
-    background: url('./../images/backgrounds/0.jpg') no-repeat center center fixed;
-    background-size: cover;
-}*/
 
 /*******************************************************************************
  *                                                                             *
@@ -110,7 +121,8 @@ body, button {
 }
 #frameTitleText {
     font-size: 14px;
-    font-family: 'Avenir Medium';
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
     letter-spacing: 0.5px;
 }
 
@@ -222,7 +234,7 @@ body, button {
     align-items: center;
     height: 100%;
     width: 100%;
-    background: rgba(0, 0, 0, 0.50);
+    background: transparent;
 }
 
 #welcomeContent {
@@ -284,7 +296,8 @@ body, button {
 }
 
 #welcomeHeader {
-    font-family: 'Avenir Medium';
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
     text-align: center;
     color: white;
     margin-bottom: 25px;
@@ -497,7 +510,8 @@ body, button {
 
 /* Header on login view. */
 #loginSubheader {
-    font-family: 'Avenir Medium';
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
     margin-bottom: 25px;
     font-size: 12px;
     letter-spacing: 1px;
@@ -522,7 +536,8 @@ body, button {
 
 /* Span which displays errors related to login field content. */
 .loginErrorSpan {
-    font-family: 'Avenir Medium';
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
     font-weight: bold;
     font-size: 8px;
     color: #ff1b0c;
@@ -558,7 +573,8 @@ body, button {
 
 /* Login text input styles. */
 .loginField {
-    font-family: 'Avenir Book';
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
     background: none;
     border-width: 1.5px 0px 0px 0px;
     border-style: solid;
@@ -1222,7 +1238,8 @@ body, button {
 }
 .settingsTabHeaderText {
     font-size: 20px;
-    font-family: 'Avenir Medium';
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
 }
 .settingsTabHeaderDesc {
     font-size: 12px;
@@ -1261,7 +1278,8 @@ body, button {
     background: none;
     font-size: 12px;
     border-radius: 3px;
-    font-family: 'Avenir Medium';
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
     transition: 0.25s ease;
     cursor: pointer;
     outline: none;
@@ -1293,7 +1311,8 @@ body, button {
     background: rgba(0, 0, 0, 0.25);
     border-radius: 3px;
     border: 1px solid rgba(126, 126, 126, 0.57);
-    font-family: 'Avenir Book';
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
     transition: 0.25s ease;
 }
 #settingsContainer input[type=number]:focus,
@@ -1322,7 +1341,8 @@ body, button {
 }
 .settingsFieldTitle {
     font-size: 14px;
-    font-family: 'Avenir Medium';
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
     color: rgba(255, 255, 255, 0.95);
 }
 .settingsFieldDesc {
@@ -1485,7 +1505,8 @@ input:checked + .toggleSwitchSlider:before {
     width: 89%;
 }
 .settingsFileSelDesc strong {
-    font-family: 'Avenir Medium';
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
 }
 
 /* * *
@@ -1593,7 +1614,8 @@ input:checked + .toggleSwitchSlider:before {
     font-size: 12px;
     color: grey;
     font-weight: bold;
-    font-family: 'Avenir Medium';
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
 }
 .settingsAuthAccountDetailValue {
     font-size: 14px;
@@ -1615,7 +1637,8 @@ input:checked + .toggleSwitchSlider:before {
     border: none;
     white-space: nowrap;
     background: none;
-    font-family: 'Avenir Medium';
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
     outline: none;
     transition: 0.25s ease;
 }
@@ -1640,7 +1663,8 @@ input:checked + .toggleSwitchSlider:before {
     background: none;
     font-size: 12px;
     border-radius: 3px;
-    font-family: 'Avenir Medium';
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
     transition: 0.25s ease;
     cursor: pointer;
     outline: none;
@@ -2195,7 +2219,8 @@ input:checked + .toggleSwitchSlider:before {
 /* Release type text. */
 #settingsAboutCurrentVersionTitle {
     font-size: 12px;
-    font-family: 'Avenir Medium';
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
     color: #23aa23;
     font-weight: bold;
 }
@@ -2284,7 +2309,8 @@ input:checked + .toggleSwitchSlider:before {
     background-color: rgba(255, 255, 255, 0.25);
     color: white;
     border-radius: 3px;
-    font-family: 'Avenir Book';
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
 }
 .settingsChangelogText li+li {
     margin-top: .25em;
@@ -2394,7 +2420,8 @@ input:checked + .toggleSwitchSlider:before {
 /* Release type text. */
 #settingsUpdateVersionTitle {
     font-size: 12px;
-    font-family: 'Avenir Medium';
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
     color: #23aa23;
     font-weight: bold;
 }
@@ -2448,9 +2475,12 @@ input:checked + .toggleSwitchSlider:before {
 /* Main content container. */
 #landingContainer {
     height: 100%;
+    width: 100%;
     position: relative;
     transition: background 2s ease;
     overflow-y: hidden;
+    padding: 0;
+    margin: 0;
 }
 
 /* Upper content container. */
@@ -2460,6 +2490,8 @@ input:checked + .toggleSwitchSlider:before {
     top: 0px;
     height: 77%;
     display: flex;
+    padding: 0;
+    margin: 0;
 }
 #landingContainer > #upper > #left {
     display: inline-flex;
@@ -2469,20 +2501,24 @@ input:checked + .toggleSwitchSlider:before {
 }
 #landingContainer > #upper > #content {
     display: inline-flex;
-    width: 70%;
+    width: 85%;
     height: 100%;
 }
 #landingContainer > #upper > #right {
     display: inline-flex;
     width: 15%;
     height: 100%;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding: 0;
+    margin: 0;
 }
 
 /* Lower content container. */
 #landingContainer > #lower {
     height: 23%;
     display: flex;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+    background: transparent;
 }
 #landingContainer > #lower > #left {
     position: relative;
@@ -2593,7 +2629,8 @@ input:checked + .toggleSwitchSlider:before {
 #newsArticleTitle {
     font-size: 18px;
     font-weight: bold;
-    font-family: 'Avenir Medium';
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
     color: white;
     text-decoration: none;
     transition: 0.25s ease;
@@ -2855,21 +2892,21 @@ input:checked + .toggleSwitchSlider:before {
 
 /* Logo image. */
 #image_seal {
-    height: 70px;
+    height: 40px;
     width: auto;
     position: relative;
-    border: 2px solid white;
+    border: none;
     box-sizing: border-box;
-    border-radius: 50%;
+    border-radius: 0;
 }
 
 /* Logo container styles. */
 #image_seal_container {
     position: relative;
-    height: 70px;
-    width: 70px;
-    border-radius: 50%;
-    margin-top: 50px;
+    height: 40px;
+    width: auto;
+    border-radius: 0;
+    margin-top: 0;
 }
 
 /* Logo container styles w/ update. */
@@ -2910,7 +2947,8 @@ input:checked + .toggleSwitchSlider:before {
     z-index: 1;
     top: 115%;
     left: -17.5px;
-    font-family: 'Avenir Medium';
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
     font-size: 12px;
     transition: visibility 0s linear 0.25s, opacity 0.25s ease;
 }
@@ -2970,14 +3008,14 @@ input:checked + .toggleSwitchSlider:before {
 
 /* User profile avatar container. */
 #avatarContainer {
-    border-radius: 50%;
+    border-radius: 0;
     border: 2px solid #cad7e1;
     box-sizing: border-box;
     background: rgba(1, 2, 1, 0.5);
-    height: 70px;
-    width: 70px;
+    height: 35px;
+    width: 35px;
     box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
-    overflow: hidden;
+    overflow: visible;
     position: relative;
     background-position: center;
     background-repeat: no-repeat;
@@ -2992,16 +3030,18 @@ input:checked + .toggleSwitchSlider:before {
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: 0.25s ease;
-    font-weight: bold;
-    letter-spacing: 2px;
-    background-color: rgba(0, 0, 0, 0.35);
-    -webkit-user-select: none;
-    border: none;
-    cursor: pointer;
+    top: 0px;
+    left: 0px;
     width: 100%;
     height: 100%;
-    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    border: none;
+    border-radius: 0;
+    text-align: center;
+    color: white;
+    font-size: 9px;
+    transition: 0.25s ease-out;
 }
 #avatarOverlay:hover,
 #avatarOverlay:focus {
@@ -3047,6 +3087,7 @@ input:checked + .toggleSwitchSlider:before {
     justify-content: center;
     align-items: center;
     height: 27px;
+    margin-bottom: 15px;
 }
 
 /* Divider bar between the external and internal icons. */
@@ -3054,22 +3095,25 @@ input:checked + .toggleSwitchSlider:before {
     height: 1px;
     width: 14px;
     background: rgb(255, 255, 255);
-    margin: 10px 0px;
+    margin: 10px 0px 25px 0px;
 }
 
 /* Social media icon shared styles. */
 .mediaSVG {
     fill: #ffffff;
-    height: 12px;
+    height: 24px;
     transition: 0.25s ease;
     cursor: pointer;
-    height: 12px;
-    width: 25px;
+    width: auto;
+    -webkit-filter: brightness(1);
+    filter: brightness(1);
 }
 .mediaSVG:hover,
 .mediaURL:focus .mediaSVG,
 .mediaSVG:active {
-    height: 20px;
+    height: 30px;
+    -webkit-filter: brightness(1.2);
+    filter: brightness(1.2);
 }
 
 /* Social media URL shared styles. */
@@ -3242,7 +3286,8 @@ input:checked + .toggleSwitchSlider:before {
     border-radius: 4px;
     padding: 5px 10px;
     z-index: 1;
-    font-family: 'Avenir Medium';
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
     font-size: 12px;
     transition: visibility 0s linear 0.25s, opacity 0.25s ease;
     bottom: calc(100% + 15px);
@@ -3510,7 +3555,7 @@ input:checked + .toggleSwitchSlider:before {
     justify-content: center;
     width: 100%;
     height: calc(100% - 22px);
-    background: rgba(0, 0, 0, 0.50);
+    background: transparent;
 }
 
 /* Main overlay content. */
@@ -3557,7 +3602,8 @@ input:checked + .toggleSwitchSlider:before {
 
 /* Overlay title styles. */
 #overlayTitle {
-    font-family: 'Avenir Medium';
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
     font-size: 20px;
     font-weight: bold;
     letter-spacing: 1px;
@@ -3583,7 +3629,8 @@ input:checked + .toggleSwitchSlider:before {
     background: none;
     border: 1px solid #ffffff;
     color: white;
-    font-family: 'Avenir Medium';
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
     font-weight: bold;
     border-radius: 2px;
     padding: 0px 8.1px;
@@ -3635,7 +3682,8 @@ input:checked + .toggleSwitchSlider:before {
 /* Server selection header. */
 #serverSelectHeader,
 #accountSelectHeader {
-    font-family: 'Avenir Medium';
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
     font-size: 20px;
     font-weight: bold;
     color: #fff;
@@ -3858,7 +3906,8 @@ input:checked + .toggleSwitchSlider:before {
     background: none;
     border: 1px solid #ffffff;
     color: white;
-    font-family: 'Avenir Medium';
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
     font-weight: bold;
     border-radius: 2px;
     padding: 0px 8.1px;

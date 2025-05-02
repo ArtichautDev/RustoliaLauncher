@@ -33,6 +33,7 @@ loginNeedAccountLink = "https://minecraft.net/store/minecraft-java-edition/"
 loginNeedAccountText = "Need an Account?"
 loginPasswordDisclaimer1 = "Your password is sent directly to mojang and never stored."
 loginPasswordDisclaimer2 = "{appName} is not affiliated with Mojang AB."
+login2faTitle = "2FA Code"
 
 [ejs.loginOptions]
 loginOptionsTitle = "Login Options"
@@ -131,8 +132,8 @@ continueButton = "CONTINUE"
 
 
 [js.discord]
-waiting = "Waiting for Client.."
-state = "Server: {shortId}"
+waiting = "Grèce antique & aventures épiques !"
+state = "Skyblock • Survie • PvP-Box • Freebuild"
 
 [js.index]
 microsoftLoginTitle = "Microsoft Login"
@@ -211,9 +212,9 @@ checkConsoleForDetails = "Please check the console (CTRL + Shift + i) for more d
 checking = "Checking for News"
 
 [js.landing.discord]
-loading = "Loading game.."
-joining = "Sailing to Westeros!"
-joined = "Exploring the Realm!"
+loading = "Grèce antique & aventures épiques !"
+joining = "Grèce antique & aventures épiques !"
+joined = "Grèce antique & aventures épiques !"
 
 [js.overlay]
 dismiss = "Dismiss"
